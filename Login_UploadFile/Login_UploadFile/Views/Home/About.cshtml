@@ -1,0 +1,102 @@
+﻿@model Login_UploadFile.Models.Document
+@{
+    Layout = null;
+}
+<h2 style="text-align:center;">@ViewBag.Message</h2>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Upload</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <script src="~/Scripts/bootstrap.min.js"></script>
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+    <script>
+        function AddSubmit() {
+            $("#form")[0].reset();
+            $("#ModalTitle").html("Submission file");
+            $("#MyModal").modal();
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <div class="panel" style="border: 1px solid #cec6c6; padding: 0 5% 0 5%;">
+            <div class="panel-header">
+                <h2>Name class</h2>
+            </div>
+            <div class="panel-body">
+                <div class="row" style="color: white; vertical-align: middle; line-height: 45px;">
+                    <div class="col-lg-4" style="background-color: #0d62a0;">Submission status</div>
+                    <div class="col-lg-8" style="background-color: #0d62a0;">Submited for grading</div>
+                </div>
+                <div class="row" style="vertical-align: middle; line-height: 45px;">
+                    <div class="col-lg-4" style="background-color: white; color: #ea8c48;">Grading status</div>
+                    <div class="col-lg-8" style="background-color: #cec6c6;">Not graded</div>
+                </div>
+                <div class="row" style="color: white; vertical-align: middle; line-height: 45px;">
+                    <div class="col-lg-4" style="background-color: #0d62a0;">Due date</div>
+                    <div class="col-lg-8" style="background-color: #0d62a0;">Not graded</div>
+                </div>
+                <div class="row" style="vertical-align: middle; line-height: 45px;">
+                    <div class="col-lg-4" style="background-color: white; color: #ea8c48;">Time remaining</div>
+                    <div class="col-lg-8" style="background-color: #17c177;">Not graded</div>
+                </div>
+                <div class="row" style="color: white; vertical-align: middle; line-height: 45px;">
+                    <div class="col-lg-4" style="background-color: #0d62a0;">Last modified</div>
+                    <div class="col-lg-8" style="background-color: #0d62a0;">Last modified</div>
+                </div>
+                <div class="row" style="vertical-align: middle; line-height: 45px;">
+                    <div class="col-lg-4" style="background-color: white; color: #ea8c48;">File submissions</div>
+                    @if (Model == null)
+                    {
+                        <div class="col-lg-8" style="background-color: white; color: #ea8c48;">File submission</div>
+                    }
+                    else
+                    {
+                        <div class="col-lg-8" style="background-color: white; color: #ea8c48;">@Html.ActionLink(@Model.path_Document.Replace("~/Files/", ""),"Download", new { path_Document = Model.path_Document.Replace("~/Files/", "") })</div>
+                    }
+                </div>
+                <div class="row" style="color: white; vertical-align: middle; line-height: 45px;">
+                    <div class="col-lg-4" style="background-color: #0d62a0;">Submissions command</div>
+                    <div class="col-lg-8" style="background-color: #0d62a0;">Not graded</div>
+                </div>
+                <br />
+                <div class="row" style="padding: 0 40% 0 40%;">
+                    @if (Model != null)
+                    {
+                        <a href="#" onclick="EditSubmit()" class="btn btn-primary">Edit submission</a>
+                    }
+                    else
+                    {
+                        <a href="#" onclick="AddSubmit()" class="btn btn-primary">Add submission</a>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="MyModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <a href="#" class="close" data-dismiss="modal">&times;</a>
+                    <h4 id="ModalTitle"></h4>
+                </div>
+                <div class="modal-body">
+                    <form id="form" action="@Url.Action("UploadFile", "Home")" method="post" enctype="multipart/form-data">
+                        <div class="form-group">
+                            <input class="form-control" accept=".doc,.docx,.pdf" type="file" id="file_document" name="file_document" placeholder="Choose file..." required />
+                        </div>
+                        <div>
+                            <button class="btn btn-block btn-primary">Submit File</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+
+
