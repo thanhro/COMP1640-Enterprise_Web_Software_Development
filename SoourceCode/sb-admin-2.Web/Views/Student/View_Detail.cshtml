@@ -96,7 +96,7 @@
                         <div class="col-lg-4" style="background-color: #0d62a0;">Choose Image</div>
                         <div class="col-lg-7" style="background-color: #0d62a0;">Image next this</div>
                         <div class="col-lg-1">
-                            @if (Model.image2 != null)
+                            @if (Model.image2.Path != null)
                             {
                                 <img src="@Url.Content(Model.image2.Path)" id="image_view" name="image_view" style="height: 43px; width: 45px;" />
                             }
@@ -144,7 +144,7 @@
                         <div class="form-group">
                             <label>Choose Image:</label>
                             <input class="form-control" type="file" onchange="readURL(this)" accept=".png,.jpeg,.jpg" id="file_image" required name="file_image"><br />
-                            @if (Model.image2 != null)
+                            @if (Model.image2.Path != null)
                             {
                                 <img id="image" src="@Url.Content(Model.image2.Path)" name="image" style="height: 100px; width: 100px;" />
                             }

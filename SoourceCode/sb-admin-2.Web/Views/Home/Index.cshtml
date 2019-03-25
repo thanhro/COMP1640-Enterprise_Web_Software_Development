@@ -36,14 +36,18 @@
                 <h5>@item.document.Contribution1.User.Name <i class="fa fa-user" style="float: right;"></i></h5>
                 <h5>@item.document.Contribution1.CreationDate <i class="fa fa-calendar" style="float: right;"></i></h5>
                 <h5>Views <i class="fa fa-eye" style="float: right;"></i></h5>
-                @if (item != null && item.comments != null)
-                {
-                    <h5>Comments<i class="fa fa-comment-o" style="float: right;"></i></h5>
-                }
+                <h5>@item.comments.Count Comments<i class="fa fa-comment-o" style="float: right;"></i></h5>
                 <a class="btn btn-primary" href="@Url.Action("View_More", "Home", new { DocumentID = item.document.DocumentID })" style="margin-bottom: 2%; width: 100%;">View More</a>
             </div>
             <div class="col-lg-9">
-                <img src="@Url.Content(item.image2.Path)" style="height: 300px; width: 100%;" />
+                @if (item.image2.Path != null)
+                {
+                    <img src="@Url.Content(item.image2.Path)" style="height: 300px; width: 100%;" />
+                }
+                else
+                {
+                    <img src="#" style="height: 300px; width: 100%;" />
+                }
                 <h3>@item.document.Contribution1.Title</h3>
                 <h5>@item.document.Contribution1.Description</h5>
             </div>

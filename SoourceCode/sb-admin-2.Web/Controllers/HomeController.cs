@@ -33,6 +33,10 @@ namespace sb_admin_2.Web.Controllers
                 ml.users = listUser;
                 ml.document = Doc;
                 ml.image2 = Img;
+                if(Img == null)
+                {
+                    ml.image2 = new Image();
+                }
                 ml.comments = listCmt;
                 listAll.Add(ml);
             }
