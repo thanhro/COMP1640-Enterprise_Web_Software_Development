@@ -141,6 +141,10 @@ namespace sb_admin_2.Web.Controllers
             myModel.comments = listComment;
             myModel.document = doc;
             myModel.image2 = doc.Contribution1.Images.SingleOrDefault(i => i.Contribution == doc.Contribution);
+            if (myModel.image2 == null)
+            {
+                myModel.image2 = new Image();
+            }
             return View("View_Detail", myModel);
         }
 
@@ -232,6 +236,10 @@ namespace sb_admin_2.Web.Controllers
             myModel.comments = listComment;
             myModel.document = doc;
             myModel.image2 = doc.Contribution1.Images.SingleOrDefault(i => i.Contribution == doc.Contribution);
+            if (myModel.image2 == null)
+            {
+                myModel.image2 = new Image();
+            }
             return View("View_Detail", myModel);
         }
 
