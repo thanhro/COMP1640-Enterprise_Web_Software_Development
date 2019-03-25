@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="16885e2894f344c0959dcfea817a2e38" Name="Diagram1">
+        <EntityTypeShape EntityType="DBModels.Category" Width="1.5" PointX="7.5" PointY="2.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="DBModels.Comment" Width="1.5" PointX="5.25" PointY="6.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="DBModels.Contribution" Width="1.5" PointX="8.25" PointY="5.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="DBModels.Document" Width="1.5" PointX="10.5" PointY="4.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="DBModels.Faculty" Width="1.5" PointX="3" PointY="2.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="DBModels.Faculty_Detail" Width="1.5" PointX="5.25" PointY="2.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="DBModels.Image" Width="1.5" PointX="10.5" PointY="7.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="DBModels.Role" Width="1.5" PointX="0.75" PointY="6.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="DBModels.sysdiagram" Width="1.5" PointX="9.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="DBModels.User" Width="1.5" PointX="3" PointY="5.875" IsExpanded="true" />
+        <AssociationConnector Association="DBModels.FK__Category__Facult__55009F39" ManuallyRouted="false" />
+        <AssociationConnector Association="DBModels.FK__Contribut__Categ__57DD0BE4" ManuallyRouted="false" />
+        <AssociationConnector Association="DBModels.FK__Comment__Contrib__5CA1C101" ManuallyRouted="false" />
+        <AssociationConnector Association="DBModels.FK__Comment__Creator__5BAD9CC8" ManuallyRouted="false" />
+        <AssociationConnector Association="DBModels.FK__Contribut__Creat__58D1301D" ManuallyRouted="false" />
+        <AssociationConnector Association="DBModels.FK__Document__Contri__5F7E2DAC" ManuallyRouted="false" />
+        <AssociationConnector Association="DBModels.FK__Image__Contribut__625A9A57" ManuallyRouted="false" />
+        <AssociationConnector Association="DBModels.FK__Faculty_D__Facul__51300E55" ManuallyRouted="false" />
+        <AssociationConnector Association="DBModels.FK__Faculty_D__UserC__5224328E" ManuallyRouted="false" />
+        <AssociationConnector Association="DBModels.FK__User__Role__06CD04F7" ManuallyRouted="false" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

@@ -1,0 +1,80 @@
+﻿@model IEnumerable<sb_admin_2.Web.Models.MultipleModelInOneView_List1>
+
+@{
+    ViewBag.Title = "Home Page";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <link rel="stylesheet" type="text/css" href="~/bower_components/bootstrap/dist/css/bootstrap.min.css" />
+
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+
+</head>
+
+<body>
+    <div class="row">
+        <div class="col-lg-12">
+            <h1 class="page-header">Featured Articles</h1>
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+    @{var i = 0;}
+    @foreach (var item in Model)
+    {
+        <div class="row" style="width: 80%; margin: auto;">
+            <div class="col-lg-3">
+                <h5><b>@item.document.Contribution1.Category1.CategoryName</b></h5>
+                <h5>@item.document.Contribution1.User.Name <i class="fa fa-user" style="float: right;"></i></h5>
+                <h5>@item.document.Contribution1.CreationDate <i class="fa fa-calendar" style="float: right;"></i></h5>
+                <h5>Views <i class="fa fa-eye" style="float: right;"></i></h5>
+                @if (item != null && item.comments != null)
+                {
+                    <h5>Comments<i class="fa fa-comment-o" style="float: right;"></i></h5>
+                }
+                <a class="btn btn-primary" href="@Url.Action("View_More", "Home", new { DocumentID = item.document.DocumentID })" style="margin-bottom: 2%; width: 100%;">View More</a>
+            </div>
+            <div class="col-lg-9">
+                <img src="@Url.Content(item.image2.Path)" style="height: 300px; width: 100%;" />
+                <h3>@item.document.Contribution1.Title</h3>
+                <h5>@item.document.Contribution1.Description</h5>
+            </div>
+            <div class="col-lg-3"></div>
+            <div class="col-lg-9">
+                <p>
+                    <a class="btn btn-primary" style="width: 100%;" data-toggle="collapse" href="#collapseExample_@i" role="button" data-parent="collapseExample" aria-expanded="false" aria-controls="collapseExample_@i">
+                        Comments
+                    </a>
+                </p>
+                <div class="collapse" id="collapseExample_@i">
+                    <div class="card card-body">
+                        <ul class="list-group">
+                            @foreach (var com in item.comments)
+                            {
+                                <li class="list-group-item"><b class="col-lg-3">@com.User.Name: </b> @com.Content</li>
+                            }
+                            <li class="list-group-item">
+                                <form id="form" method="post" action="@Url.Action("Add_Comment", "Home")">
+                                    <input hidden type="text" id="DocumentID" name="DocumentID" value="@item.document.DocumentID" />
+                                    <input hidden type="text" id="ContributionID" name="ContributionID" value="@item.document.Contribution1.ContributionID" />
+                                    <input type="text" class="form-control" placeholder="Enter your comment" required id="comment" name="comment" /><br />
+                                    <center><button class="btn btn-primary">Add Comment</button></center>
+                                </form>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div><br /><br />
+        i++;
+    }
+</body>
+</html>

@@ -1,0 +1,57 @@
+﻿using sb_admin_2.Web.Models;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+
+namespace sb_admin_2.Web.Domain
+{
+    public class Data
+    {
+        public IEnumerable<Navbar> navbarItems()
+        {
+            var menu = new List<Navbar>();
+            if (HttpContext.Current.Session["User"] != null)
+            {
+                User user = (User)HttpContext.Current.Session["User"];
+                if(user.Role1.RoleName.Equals("Student"))
+                {
+                    menu.Add(new Navbar { Id = 1, nameOption = "Dashboard", controller = "Home", action = "Index", imageClass = "fa fa-dashboard fa-fw", status = true, isParent = false, parentId = 0 });
+                    menu.Add(new Navbar { Id = 2, nameOption = "Documents", imageClass = "fa fa-bar-chart-o fa-fw", status = true, isParent = true, parentId = 0 });
+                    menu.Add(new Navbar { Id = 3, nameOption = "Upload File", controller = "Student", action = "UploadFile", status = true, isParent = false, parentId = 2 });
+                    menu.Add(new Navbar { Id = 4, nameOption = "View My Files", controller = "Student", action = "ViewStudentFiles", status = true, isParent = false, parentId = 2 });
+                    return menu.ToList();
+                }
+                else if (user.Role1.RoleName.Equals("Faculty"))
+                {
+                    menu.Add(new Navbar { Id = 1, nameOption = "Tables", controller = "Home", action = "Tables", imageClass = "fa fa-table fa-fw", status = true, isParent = false, parentId = 0 });
+                    return menu.ToList();
+                }
+                else if (user.Role1.RoleName.Equals("Marketing Coordinator"))
+                {
+                    menu.Add(new Navbar { Id = 1, nameOption = "Dashboard", controller = "Home", action = "Index", imageClass = "fa fa-dashboard fa-fw", status = true, isParent = false, parentId = 0 });
+                    menu.Add(new Navbar { Id = 2, nameOption = "Add Category", controller = "ManageCoordinator", action = "Add_Category", status = true, isParent = false, parentId = 0 });
+                    menu.Add(new Navbar { Id = 3, nameOption = "View My Faclties", controller = "ManageCoordinator", action = "View_Faculty", status = true, isParent = false, parentId = 0 });
+                    return menu.ToList();
+                }
+                else if (user.Role1.RoleName.Equals("Marketing Manager"))
+                {
+                    menu.Add(new Navbar { Id = 1, nameOption = "Dashboard", controller = "Home", action = "Index", imageClass = "fa fa-dashboard fa-fw", status = true, isParent = false, parentId = 0 });
+                    menu.Add(new Navbar { Id = 2, nameOption = "Add Faculty", controller = "ManageMarketing", action = "AddFaculty", status = true, isParent = false, parentId = 0 });
+                    menu.Add(new Navbar { Id = 2, nameOption = "Assigned Faculty", controller = "ManageMarketing", action = "Assigned_Faculty", status = true, isParent = false, parentId = 0 });
+                    return menu.ToList();
+                }
+                else if (user.Role1.RoleName.Equals("Administrator"))
+                {
+                    return menu.ToList();
+                }
+                else if (user.Role1.RoleName.Equals("Guest Account"))
+                {
+                    return menu.ToList();
+                }
+            }
+            menu.Clear();
+            return menu;
+        }
+    }
+}

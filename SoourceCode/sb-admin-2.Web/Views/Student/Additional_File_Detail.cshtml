@@ -1,0 +1,129 @@
+﻿@model sb_admin_2.Web.Models.MultipleModelInOneView
+@{
+    ViewBag.Title = "Additional_File_Detail";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <link rel="stylesheet" type="text/css" href="~/bower_components/bootstrap/dist/css/bootstrap.min.css" />
+
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+
+    <script>
+        //Preview & Update an image before it is uploaded
+        function readURL(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+
+                reader.onload = function (e) {
+                    $('#image')
+                        .attr('src', e.target.result);
+                };
+
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+    </script>
+</head>
+<body>
+    @if (@ViewBag.Success != null)
+    {
+        <div style="width: 30%; margin:auto; margin-top: 2%;" class="alert alert-success alert-dismissable">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+            @ViewBag.Success
+        </div>
+    }
+    @if (@ViewBag.Error != null)
+    {
+        <div style="width: 30%; margin:auto; margin-top: 2%;" class="alert alert-warning alert-dismissable">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+            @ViewBag.Error
+        </div>
+    }
+    <div class="row">
+        <div class="col-lg-12">
+            <h1 class="page-header">Upload Files</h1>
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <form id="form" method="post" action="@Url.Action("AddImage", "Student")" enctype="multipart/form-data">
+                <div class="panel" style="border: 1px solid #cec6c6; padding: 0 5% 0 5%;">
+                    <div class="panel-header">
+                        <h2>@Model.document.Contribution1.Title</h2>
+                    </div>
+                    <div class="panel-body">
+                        <input hidden type="text" value="@Model.document.DocumentID" id="DocumentID" name="DocumentID" />
+                        <div class="row" style="color: white; vertical-align: middle; line-height: 45px;">
+                            <div class="col-lg-4" style="background-color: #0d62a0;">Category Name</div>
+                            <div class="col-lg-8" style="background-color: #0d62a0;">@Model.document.Contribution1.Category1.CategoryName</div>
+                        </div>
+                        <div class="row" style="vertical-align: middle; line-height: 45px;">
+                            <div class="col-lg-4" style="background-color: white; color: #ea8c48;">Closure Date</div>
+                            <div class="col-lg-8" style="background-color: #cec6c6;">@Model.document.Contribution1.Category1.ClosureDate</div>
+                        </div>
+                        <div class="row" style="color: white; vertical-align: middle; line-height: 45px;">
+                            <div class="col-lg-4" style="background-color: #0d62a0;">Final Closure Date</div>
+                            <div class="col-lg-8" style="background-color: #0d62a0;">@Model.document.Contribution1.Category1.FinalClosureDate</div>
+                        </div>
+                        <div class="row" style="vertical-align: middle; line-height: 45px;">
+                            <div class="col-lg-4" style="background-color: white; color: #ea8c48;">Time remaining</div>
+                            <div class="col-lg-8" style="background-color: #17c177; color: white;">
+                                @(string.Format("{0}", Math.Round(Math.Abs(((Convert.ToDateTime(Model.document.Contribution1.Category1.FinalClosureDate) - DateTime.Now).TotalDays))).ToString() + " days"))
+                            </div>
+                        </div>
+                        <div class="row" style="color: white; vertical-align: middle; line-height: 45px;">
+                            <div class="col-lg-4" style="background-color: #0d62a0;">Last modified</div>
+                            <div class="col-lg-8" style="background-color: #0d62a0;">@Model.document.Contribution1.CreationDate</div>
+                        </div>
+                        <div class="row" style="vertical-align: middle; line-height: 45px;">
+                            <div class="col-lg-4" style="background-color: white; color: #ea8c48;">File submissions</div>
+                            <div class="col-lg-8" style="background-color: white; color: #ea8c48;">
+                                <a href="@Url.Action("Download", "Student", new { DocumentID = Model.document.DocumentID })">@Model.document.Path.Replace("~/Files/", "")</a>
+                            </div>
+                        </div>
+                        <div class="row" style="color: white; vertical-align: middle; line-height: 45px;">
+                            <div class="col-lg-4" style="background-color: #0d62a0;">Choose Image</div>
+                            <input class="col-lg-7" style="background-color: #0d62a0;" type="file" accept=".png,.jpeg,.gif" onchange="readURL(this)" required id="file_image" name="file_image" />
+                            <div class="col-lg-1">
+                                @if (Model.image1 != null)
+                                {
+                                    <img id="image" src="@Url.Content(Model.image1.Path)" name="image" style="height: 45px;" />
+                                }
+                                else
+                                {
+                                    <img id="image" src="#" name="image" style="height: 45px;" />
+                                }
+                            </div>
+                        </div>
+                        <br />
+                        <div class="row" style="padding: 0 40% 0 40%;">
+                            @if (Model.image1 != null)
+                            {
+                                <a href="#" class="btn btn-primary">Edit Image</a>
+                            }
+                            else
+                            {
+                                <button class="btn btn-primary">Add Image</button>
+                            }
+
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+</body>
+</html>
+

@@ -1,0 +1,63 @@
+﻿
+@{
+    ViewBag.Title = "Assigned_Faculty";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>Assigned Faculty</title>
+
+    <link rel="stylesheet" type="text/css" href="~/bower_components/bootstrap/dist/css/bootstrap.min.css" />
+
+</head>
+
+<body>
+    @if (@ViewBag.Success != null)
+    {
+        <div style="width: 30%; margin:auto; margin-top: 2%;" class="alert alert-success alert-dismissable">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+            @ViewBag.Success
+        </div>
+    }
+    @if (@ViewBag.Error != null)
+    {
+        <div style="width: 30%; margin:auto; margin-top: 2%;" class="alert alert-warning alert-dismissable">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+            @ViewBag.Error
+        </div>
+    }
+    <div class="row">
+        <div class="col-lg-12">
+            <h1 class="page-header">Assigned Faculty</h1>
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+    <div class="row">
+        <div class="col-lg-12" style="width: 50%; margin: auto;">
+            <form id="form" method="post" action="@Url.Action("Assigned_Faculty_Detail", "ManageMarketing")">
+                <div class="form-group">
+                    <label>Faculty Name</label>
+                    @Html.DropDownList("FacultyID", ViewBag.listFac as SelectList, "---Select Faculty---", htmlAttributes: new { @class = "form-control", @required = "true", @name = "FacultyID", @id = "FacultyID" })
+                </div>
+
+                <div class="form-group">
+                    <label>ManageCoordinator</label>
+                    @Html.DropDownList("UserID", ViewBag.listMC as SelectList, "---Select ManageCoordinator---", htmlAttributes: new { @class = "form-control", @required = "true", @name = "UserID", @id = "FacultyID" })
+                </div>
+
+                <button class="btn btn-default btn-primary">Assigned Faculty</button>
+            </form>
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+</body>
+</html>
+
+

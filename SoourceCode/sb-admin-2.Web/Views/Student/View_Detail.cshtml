@@ -1,0 +1,208 @@
+﻿@model sb_admin_2.Web.Models.MultipleModelInOneView_List1
+@{
+    ViewBag.Title = "View_Detail";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <link rel="stylesheet" type="text/css" href="~/bower_components/bootstrap/dist/css/bootstrap.min.css" />
+
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+
+    <script>
+        //Preview & Update an image before it is uploaded
+        function readURL(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+
+                reader.onload = function (e) {
+                    $('#image')
+                        .attr('src', e.target.result);
+                };
+
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+    </script>
+
+</head>
+
+<body>
+    @if (@ViewBag.Success != null)
+    {
+        <div style="width: 30%; margin:auto; margin-top: 2%;" class="alert alert-success alert-dismissable">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+            @ViewBag.Success
+        </div>
+    }
+    @if (@ViewBag.Error != null)
+    {
+        <div style="width: 30%; margin:auto; margin-top: 2%;" class="alert alert-warning alert-dismissable">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+            @ViewBag.Error
+        </div>
+    }
+    <div class="row">
+        <div class="col-lg-12">
+            <h1 class="page-header">View File Detail</h1>
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="panel" style="border: 1px solid #cec6c6; padding: 0 5% 0 5%;">
+                <div class="panel-header">
+                    <h3>@Model.document.Contribution1.Title</h3>
+                </div>
+                <div class="panel-body">
+                    <div class="row" style="color: white; vertical-align: middle; line-height: 45px;">
+                        <div class="col-lg-4" style="background-color: #0d62a0;">Category Name</div>
+                        <div class="col-lg-8" style="background-color: #0d62a0;">@Model.document.Contribution1.Category1.CategoryName</div>
+                    </div>
+                    <div class="row" style="vertical-align: middle; line-height: 45px;">
+                        <div class="col-lg-4" style="background-color: white; color: #ea8c48;">Closure Date</div>
+                        <div class="col-lg-8" style="background-color: #cec6c6;">@Model.document.Contribution1.Category1.ClosureDate</div>
+                    </div>
+                    <div class="row" style="color: white; vertical-align: middle; line-height: 45px;">
+                        <div class="col-lg-4" style="background-color: #0d62a0;">Final Closure Date</div>
+                        <div class="col-lg-8" style="background-color: #0d62a0;">@Model.document.Contribution1.Category1.FinalClosureDate</div>
+                    </div>
+                    <div class="row" style="vertical-align: middle; line-height: 45px;">
+                        <div class="col-lg-4" style="background-color: white; color: #ea8c48;">Time remaining</div>
+                        <div class="col-lg-8" style="background-color: #17c177; color: white;">
+                            @(string.Format("{0}", Math.Round(Math.Abs(((Convert.ToDateTime(Model.document.Contribution1.Category1.FinalClosureDate) - DateTime.Now).TotalDays))).ToString() + " days"))
+                        </div>
+                    </div>
+                    <div class="row" style="color: white; vertical-align: middle; line-height: 45px;">
+                        <div class="col-lg-4" style="background-color: #0d62a0;">Last modified</div>
+                        <div class="col-lg-8" style="background-color: #0d62a0;">@Model.document.Contribution1.CreationDate</div>
+                    </div>
+                    <div class="row" style="vertical-align: middle; line-height: 45px;">
+                        <div class="col-lg-4" style="background-color: white; color: #ea8c48;">File submissions</div>
+                        <div class="col-lg-8" style="background-color: white; color: #ea8c48;">
+                            <a href="@Url.Action("Download", "Student", new { DocumentID = Model.document.DocumentID })">@Model.document.Path.Replace("~/Files/", "")</a>
+                        </div>
+                    </div>
+                    <div class="row" style="color: white; vertical-align: middle; line-height: 45px;">
+                        <div class="col-lg-4" style="background-color: #0d62a0;">Choose Image</div>
+                        <div class="col-lg-7" style="background-color: #0d62a0;">Image next this</div>
+                        <div class="col-lg-1">
+                            @if (Model.image2 != null)
+                            {
+                                <img src="@Url.Content(Model.image2.Path)" id="image_view" name="image_view" style="height: 43px; width: 45px;" />
+                            }
+                            else
+                            {
+                                <img src="#" id="image_view" name="image_view" style="height: 43px; width: 45px;" />
+                            }
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row" style="padding: 0 40% 0 40%;">
+                        <a data-toggle="modal" data-target="#myModal" class="btn btn-primary">Edit submission</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form id="form" method="post" action="@Url.Action("Edit_Submission", "Student")" enctype="multipart/form-data">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title" id="myModalLabel">Edit Submission</h4>
+                    </div>
+                    <div class="modal-body">
+                        <input hidden type="text" id="DocumentID" name="DocumentID" value="@Model.document.DocumentID">
+                        <input hidden type="text" id="ImageID" name="ImageID" value="@Model.image2.ImageID">
+                        <div class="form-group">
+                            <label>Title</label>
+                            <input class="form-control" type="text" id="new_title" name="new_title" required value="@Model.document.Contribution1.Title">
+                        </div>
+                        <div class="form-group">
+                            <label>Description</label>
+                            <textarea class="form-control" id="new_description" name="new_description" required rows="3">@Model.document.Contribution1.Description</textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>Category (Topic): </label> @Model.document.Contribution1.Category1.CategoryName
+                            @Html.DropDownList("new_CategoryID", ViewBag.listCat as SelectList, "---Select Category---", htmlAttributes: new { @class = "form-control", @required = "true", @name = "new_CategoryID", @id = "new_CategoryID" })
+                        </div>
+                        <div class="form-group">
+                            <label>Choose File:</label> <a href="#">@Model.document.Path.Replace("~/Files/", "")</a>
+                            <input class="form-control" type="file" accept=".doc,.docx,.pdf" id="new_file_document" required name="new_file_document">
+                        </div>
+                        <div class="form-group">
+                            <label>Choose Image:</label>
+                            <input class="form-control" type="file" onchange="readURL(this)" accept=".png,.jpeg,.jpg" id="file_image" required name="file_image"><br />
+                            @if (Model.image2 != null)
+                            {
+                                <img id="image" src="@Url.Content(Model.image2.Path)" name="image" style="height: 100px; width: 100px;" />
+                            }
+                            else
+                            {
+                                <img id="image" src="#" name="image" style="height: 100px; width: 100px;" />
+                            }
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-default btn-primary">Save Changes</button>
+                    </div>
+                </form>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+    <!-- Feature Comment-->
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    Old Comments
+                </div>
+                <div class="panel-body">
+                    <div class="col-lg-2">
+                        @foreach (var user in Model.users)
+                        {
+                            <b>@user.Name (said): </b><br />
+                        }
+                    </div>
+                    @foreach (var comment in Model.comments)
+                    {
+                        <div class="col-lg-7">
+                            @comment.Content<br />
+                        </div>
+                        <div class="col-lg-3">
+                            @comment.CommentDate<br />
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+    <form id="form" method="post" action="@Url.Action("Add_Comment", "Student")">
+        <input hidden type="text" id="DocumentID" name="DocumentID" value="@Model.document.DocumentID" />
+        <input hidden type="text" id="ContributionID" name="ContributionID" value="@Model.document.Contribution1.ContributionID" />
+        <div class="row">
+            <div class="col-lg-12">
+                <textarea class="form-control" rows="3" required placeholder="Enter your comment..." id="comment" name="comment"></textarea>
+            </div>
+        </div>
+        <div class="row" style="margin-top: 2%; margin-bottom: 2%;">
+            <div class="col-lg-3">
+                <button class="btn btn-primary">Add Comment</button>
+            </div>
+        </div>
+    </form>
+</body>
+</html>

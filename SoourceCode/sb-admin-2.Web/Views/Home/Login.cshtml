@@ -1,0 +1,85 @@
+﻿@{
+    ViewBag.Title = "Login";
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>Login</title>
+    <!--===============================================================================================-->
+    <link rel="icon" type="image/png" href="~/Images/icons/favicon.ico" />
+    <link rel="stylesheet" type="text/css" href="~/Content/util.css">
+    <link rel="stylesheet" type="text/css" href="~/Content/login.css">
+    <link rel="stylesheet" type="text/css" href="~/bower_components/bootstrap/dist/css/bootstrap.min.css" />
+    <script src="~/Scripts/login.js"></script>
+    <!--===============================================================================================-->
+    <!-- jQuery -->
+    @Scripts.Render("~/bundles/jquery")
+    <script src="@Url.Content("~/bower_components/jquery/dist/jquery.min.js")"></script>
+    @Scripts.Render("~/bundles/bootstrap")
+    <script src="@Url.Content("~/bower_components/metisMenu/dist/metisMenu.min.js")"></script>
+</head>
+<body>
+    @if (@ViewBag.Alert != null)
+    {
+        <div style="width: 30%; margin:auto; margin-top: 2%;" class="alert alert-danger alert-dismissable">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+            @ViewBag.Alert
+        </div>
+    }
+    <div class="limiter">
+        <div class="container-login100">
+            <div class="wrap-login100 p-t-50 p-b-90">
+                <form action="@Url.Action("LoginRole", "Home")" method="post" id="form" class="login100-form validate-form flex-sb flex-w">
+                    <span class="login100-form-title p-b-51">
+                        Login
+                    </span>
+
+                    <div class="wrap-input100 validate-input m-b-16" data-validate="Email is required">
+                        <input class="input100" type="email" required name="email" placeholder="Email">
+                        <span class="focus-input100"></span>
+                    </div>
+
+                    <div class="wrap-input100 validate-input m-b-16" data-validate="Password is required">
+                        <input class="input100" type="password" required name="pass" placeholder="Password">
+                        <span class="focus-input100"></span>
+                    </div>
+
+                    <div class="flex-sb-m w-full p-t-3 p-b-24">
+                        <div class="contact100-form-checkbox">
+                            <a href="#" class="txt1">
+                                Register a new account
+                            </a>
+                        </div>
+
+                        <div>
+                            <a href="#" class="txt1">
+                                Forgot?
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="container-login100-form-btn m-t-17">
+                        <button class="login100-form-btn">
+                            Login
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div id="dropDownSelect1"></div>
+</body>
+</html>
+
+
+
+
+
+
+
