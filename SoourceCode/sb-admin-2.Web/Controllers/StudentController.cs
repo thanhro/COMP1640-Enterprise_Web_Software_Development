@@ -194,8 +194,8 @@ namespace sb_admin_2.Web.Controllers
             string extension_Image = Path.GetExtension(file_image.FileName);
             fileName_Image = fileName_Image + extension_Image;
             fileName_Image = Path.Combine(Server.MapPath("~/Images/"), fileName_Image);
-            // Document
-            if(ImageID == null)
+            // Image
+            if(ImageID.Equals("00000000-0000-0000-0000-000000000000"))
             {
                 Image image = new Image();
                 image.ImageName = file_image.FileName.Split('.')[0].ToString();
@@ -210,7 +210,7 @@ namespace sb_admin_2.Web.Controllers
             {
                 var ImageID_ToUpper = Guid.Parse(ImageID);
                 Image image1 = db.Images.SingleOrDefault(d => d.ImageID == ImageID_ToUpper);
-                //add to document
+                //update image
                 image1.ImageName = file_image.FileName.Split('.')[0].ToString();
                 image1.Path = "~/Images/" + file_image.FileName;
                 image1.UploadDate = now;
