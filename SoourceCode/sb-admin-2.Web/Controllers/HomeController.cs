@@ -4,6 +4,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Security.Cryptography;
+using System.Text;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Security;
@@ -22,7 +24,7 @@ namespace sb_admin_2.Web.Controllers
                 var ContributionID_Guid = listCTP[j].ContributionID;
                 Document Doc = db.Documents.SingleOrDefault(dc => dc.Contribution == ContributionID_Guid);
                 Image Img = db.Images.SingleOrDefault(im => im.Contribution == ContributionID_Guid);
-                List<Comment> listCmt = db.Comments.Where(im => im.Contribution == ContributionID_Guid).ToList();
+                List<Comment> listCmt = db.Comments.Where(im => im.Contribution == ContributionID_Guid && im.Status == 2).ToList();
                 List<User> listUser = new List<User>();
                 for (int i = 0; i < listCmt.Count; i++)
                 {
@@ -69,7 +71,7 @@ namespace sb_admin_2.Web.Controllers
                 var ContributionID_Guid = listCTP[j].ContributionID;
                 Document Doc = db.Documents.SingleOrDefault(dc => dc.Contribution == ContributionID_Guid);
                 Image Img = db.Images.SingleOrDefault(im => im.Contribution == ContributionID_Guid);
-                List<Comment> listCmt = db.Comments.Where(im => im.Contribution == ContributionID_Guid).ToList();
+                List<Comment> listCmt = db.Comments.Where(im => im.Contribution == ContributionID_Guid && im.Status == 2).ToList();
                 List<User> listUser = new List<User>();
                 for (int i = 0; i < listCmt.Count; i++)
                 {
@@ -100,7 +102,7 @@ namespace sb_admin_2.Web.Controllers
             comm.Creator = user.UserID;
             comm.Contribution = ContributionID_Guid1;
             comm.CommentDate = now;
-            comm.Status = 1;
+            comm.Status = 2;
             db.Comments.Add(comm);
             db.SaveChanges();
             // View
@@ -112,7 +114,7 @@ namespace sb_admin_2.Web.Controllers
                 var ContributionID_Guid = listCTP[j].ContributionID;
                 Document Doc = db.Documents.SingleOrDefault(dc => dc.Contribution == ContributionID_Guid);
                 Image Img = db.Images.SingleOrDefault(im => im.Contribution == ContributionID_Guid);
-                List<Comment> listCmt = db.Comments.Where(im => im.Contribution == ContributionID_Guid).ToList();
+                List<Comment> listCmt = db.Comments.Where(im => im.Contribution == ContributionID_Guid && im.Status == 2).ToList();
                 List<User> listUser = new List<User>();
                 for (int i = 0; i < listCmt.Count; i++)
                 {
@@ -160,9 +162,27 @@ namespace sb_admin_2.Web.Controllers
             return View("Login");
         }
 
+        private string encryption(String password)
+        {
+            MD5CryptoServiceProvider md5 = new MD5CryptoServiceProvider();
+            byte[] encrypt;
+            UTF8Encoding encode = new UTF8Encoding();
+            //encrypt the given password string into Encrypted data  
+            encrypt = md5.ComputeHash(encode.GetBytes(password));
+            StringBuilder encryptdata = new StringBuilder();
+            //Create a new string by using the encrypted data  
+            for (int i = 0; i < encrypt.Length; i++)
+            {
+                encryptdata.Append(encrypt[i].ToString());
+            }
+            return encryptdata.ToString();
+        }
+
+
         public ActionResult LoginRole(string email, string pass)
         {
-            User user = db.Users.SingleOrDefault(u => u.Email.Equals(email) && u.Password.Equals(pass));
+            string passmd5 = encryption(pass);
+            User user = db.Users.SingleOrDefault(u => u.Email.Equals(email) && u.Password.Equals(passmd5));
             if (user != null && user.Status == 1)
             {
                 Session.Add("User", user);
@@ -176,19 +196,22 @@ namespace sb_admin_2.Web.Controllers
         public ActionResult Logout()
         {
             FormsAuthentication.SignOut();
-            Session.RemoveAll();
+            if(Session["User"] != null)
+            {
+                Session.Remove("User");
+            }
             return RedirectToAction("Login", "Home");
         }
 
-        //public ActionResult FlotCharts()
-        //{
-        //    return View("FlotCharts");
-        //}
+        public ActionResult FlotCharts()
+        {
+            return View("FlotCharts");
+        }
 
-        //public ActionResult MorrisCharts()
-        //{
-        //    return View("MorrisCharts");
-        //}
+        public ActionResult MorrisCharts()
+        {
+            return View("MorrisCharts");
+        }
 
         public ActionResult Tables()
         {

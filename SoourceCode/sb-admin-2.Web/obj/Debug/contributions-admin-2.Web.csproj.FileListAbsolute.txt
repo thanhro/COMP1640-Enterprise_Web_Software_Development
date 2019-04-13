@@ -60,3 +60,10 @@ C:\Users\MyPC\Desktop\COMP1640\COMP1640-Enterprise_Web_Software_Development\Soou
 C:\Users\MyPC\Desktop\COMP1640\COMP1640-Enterprise_Web_Software_Development\SoourceCode\sb-admin-2.Web\obj\Debug\contributions-admin-2.Web.csproj.CopyComplete
 C:\Users\MyPC\Desktop\COMP1640\COMP1640-Enterprise_Web_Software_Development\SoourceCode\sb-admin-2.Web\obj\Debug\sb-admin-2.Web.dll
 C:\Users\MyPC\Desktop\COMP1640\COMP1640-Enterprise_Web_Software_Development\SoourceCode\sb-admin-2.Web\obj\Debug\sb-admin-2.Web.pdb
+C:\Users\MyPC\Desktop\COMP1640\COMP1640-Enterprise_Web_Software_Development\SoourceCode\sb-admin-2.Web\bin\ICSharpCode.SharpZipLib.dll
+C:\Users\MyPC\Desktop\COMP1640\COMP1640-Enterprise_Web_Software_Development\SoourceCode\sb-admin-2.Web\bin\ICSharpCode.SharpZipLib.pdb
+C:\Users\MyPC\Desktop\COMP1640\COMP1640-Enterprise_Web_Software_Development\SoourceCode\sb-admin-2.Web\bin\ICSharpCode.SharpZipLib.xml
+C:\Users\MyPC\Desktop\COMP1640\COMP1640-Enterprise_Web_Software_Development\SoourceCode\sb-admin-2.Web\bin\EPPlus.dll
+C:\Users\MyPC\Desktop\COMP1640\COMP1640-Enterprise_Web_Software_Development\SoourceCode\sb-admin-2.Web\bin\System.IO.FileSystem.Primitives.dll
+C:\Users\MyPC\Desktop\COMP1640\COMP1640-Enterprise_Web_Software_Development\SoourceCode\sb-admin-2.Web\bin\System.IO.Packaging.dll
+C:\Users\MyPC\Desktop\COMP1640\COMP1640-Enterprise_Web_Software_Development\SoourceCode\sb-admin-2.Web\bin\EPPlus.xml

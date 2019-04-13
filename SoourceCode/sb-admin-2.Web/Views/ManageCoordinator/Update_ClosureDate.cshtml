@@ -1,0 +1,98 @@
+﻿
+@{
+    ViewBag.Title = "Update_ClosureDate";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>Add Category</title>
+
+    <link rel="stylesheet" type="text/css" href="~/bower_components/bootstrap/dist/css/bootstrap.min.css" />
+
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+
+    <script>
+        $(document).ready(function () {
+            $('#CategoryID').change(function () {
+                var CategoryID = $('#CategoryID').val();
+                if (CategoryID == "") {
+                    $('#div1').hide("slide");
+                    $('#div2').hide("slide");
+                    $('#btn1').hide("slide");
+                } else {
+                    var array = @Html.Raw(Json.Encode(((IEnumerable<sb_admin_2.Web.Models.Category>)ViewBag.ListCat_Check).Select(cat => new 
+                        { 
+                            catId = cat.CategoryID, 
+                            catName = cat.CategoryName, 
+                            catClosureDate = cat.ClosureDate.ToString(),
+                            catFinalClosureDate = cat.FinalClosureDate.ToString(),
+                            catFacultyID = cat.Faculty_DetailID,
+                            catDescription = cat.Description,
+                            catStatus = cat.Status
+                        }))
+                    );
+                    for (var i = 0; i < array.length; i++){
+                        if (CategoryID == array[i].catId) {
+                            $('#oldfinalclosuredate').val(array[i].catFinalClosureDate);
+                        }
+                    }
+                    $('#div1').show("slide");
+                    $('#div2').show("slide");
+                    $('#btn1').show("slide");
+                }
+            });
+        });
+    </script>
+
+</head>
+
+<body>
+    @if (@ViewBag.Success != null)
+    {
+        <div style="width: 30%; margin:auto; margin-top: 2%;" class="alert alert-success alert-dismissable">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+            @ViewBag.Success
+        </div>
+    }
+    @if (@ViewBag.Error != null)
+    {
+        <div style="width: 30%; margin:auto; margin-top: 2%;" class="alert alert-warning alert-dismissable">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+            @ViewBag.Error
+        </div>
+    }
+    <div class="row">
+        <div class="col-lg-12">
+            <h1 class="page-header">Update Closure Date</h1>
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+    <div class="row">
+        <div class="col-lg-12" style="width: 50%; margin: auto; margin-bottom: 3%;">
+            <form id="form" method="post" action="@Url.Action("Update_ClosureDate_Real", "ManageCoordinator")">
+                <div class="form-group">
+                    <label>Category Name</label>
+                    @Html.DropDownList("CategoryID", ViewBag.listCat as SelectList, "---Select Category---", htmlAttributes: new { @class = "form-control", @required = "true", @name = "CategoryID", @id = "CategoryID" })
+                </div>
+                <div class="form-group" id="div1" style="display: none;">
+                    <label>Old Final Closure Date</label>
+                    <input class="form-control" type="text" id="oldfinalclosuredate" readonly name="oldfinalclosuredate">
+                </div>
+                <div class="form-group" id="div2" style="display: none;">
+                    <label>New Final Closure Date</label>
+                    <input class="form-control" type="datetime-local" id="new_finalclosuredate" name="new_finalclosuredate" required placeholder="dd/MM/yyyy hh:mm tt">
+                </div>
+                <button class="btn btn-default btn-primary" style="display: none;" id="btn1">Change Closure Date</button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>
+

@@ -1,0 +1,278 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="DBModels.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityType Name="Category">
+    <Key>
+      <PropertyRef Name="CategoryID" />
+    </Key>
+    <Property Name="CategoryID" Type="uniqueidentifier" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="CategoryName" Type="varchar" MaxLength="200" />
+    <Property Name="ClosureDate" Type="datetime" />
+    <Property Name="FinalClosureDate" Type="datetime" />
+    <Property Name="Faculty_DetailID" Type="uniqueidentifier" />
+    <Property Name="Description" Type="varchar" MaxLength="500" />
+    <Property Name="Status" Type="int" />
+  </EntityType>
+  <EntityType Name="Comment">
+    <Key>
+      <PropertyRef Name="CommentID" />
+    </Key>
+    <Property Name="CommentID" Type="uniqueidentifier" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="Content" Type="varchar(max)" />
+    <Property Name="Creator" Type="uniqueidentifier" />
+    <Property Name="Contribution" Type="uniqueidentifier" />
+    <Property Name="CommentDate" Type="datetime" />
+    <Property Name="Status" Type="int" />
+  </EntityType>
+  <EntityType Name="Contribution">
+    <Key>
+      <PropertyRef Name="ContributionID" />
+    </Key>
+    <Property Name="ContributionID" Type="uniqueidentifier" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="Title" Type="varchar" MaxLength="200" />
+    <Property Name="Description" Type="varchar" MaxLength="500" />
+    <Property Name="CreationDate" Type="datetime" />
+    <Property Name="Category" Type="uniqueidentifier" />
+    <Property Name="Creator" Type="uniqueidentifier" />
+    <Property Name="Status" Type="int" />
+  </EntityType>
+  <EntityType Name="Document">
+    <Key>
+      <PropertyRef Name="DocumentID" />
+    </Key>
+    <Property Name="DocumentID" Type="uniqueidentifier" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="DocumentName" Type="varchar" MaxLength="200" />
+    <Property Name="Path" Type="varchar" MaxLength="300" />
+    <Property Name="UploadDate" Type="datetime" />
+    <Property Name="Contribution" Type="uniqueidentifier" />
+  </EntityType>
+  <EntityType Name="Faculty">
+    <Key>
+      <PropertyRef Name="FacultyID" />
+    </Key>
+    <Property Name="FacultyID" Type="uniqueidentifier" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="FacultyName" Type="varchar" MaxLength="200" />
+    <Property Name="Description" Type="varchar" MaxLength="200" />
+  </EntityType>
+  <EntityType Name="Faculty_Detail">
+    <Key>
+      <PropertyRef Name="Faculty_DetailID" />
+    </Key>
+    <Property Name="Faculty_DetailID" Type="uniqueidentifier" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="FacultyID" Type="uniqueidentifier" />
+    <Property Name="UserCoordinator" Type="uniqueidentifier" />
+  </EntityType>
+  <EntityType Name="Image">
+    <Key>
+      <PropertyRef Name="ImageID" />
+    </Key>
+    <Property Name="ImageID" Type="uniqueidentifier" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="ImageName" Type="varchar" MaxLength="200" />
+    <Property Name="Description" Type="varchar" MaxLength="500" />
+    <Property Name="Path" Type="varchar" MaxLength="300" />
+    <Property Name="UploadDate" Type="datetime" />
+    <Property Name="Contribution" Type="uniqueidentifier" />
+  </EntityType>
+  <EntityType Name="Role">
+    <Key>
+      <PropertyRef Name="RoleID" />
+    </Key>
+    <Property Name="RoleID" Type="uniqueidentifier" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="RoleName" Type="varchar" MaxLength="200" />
+    <Property Name="Description" Type="varchar" MaxLength="500" />
+  </EntityType>
+  <EntityType Name="sysdiagrams">
+    <Key>
+      <PropertyRef Name="diagram_id" />
+    </Key>
+    <Property Name="name" Type="nvarchar" MaxLength="128" Nullable="false" />
+    <Property Name="principal_id" Type="int" Nullable="false" />
+    <Property Name="diagram_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="version" Type="int" />
+    <Property Name="definition" Type="varbinary(max)" />
+  </EntityType>
+  <EntityType Name="User">
+    <Key>
+      <PropertyRef Name="UserID" />
+    </Key>
+    <Property Name="UserID" Type="uniqueidentifier" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="Email" Type="varchar" MaxLength="200" />
+    <Property Name="Password" Type="varchar" MaxLength="200" />
+    <Property Name="Name" Type="varchar" MaxLength="200" />
+    <Property Name="Address" Type="varchar" MaxLength="200" />
+    <Property Name="Phone" Type="varchar" MaxLength="100" />
+    <Property Name="Role" Type="uniqueidentifier" />
+    <Property Name="Status" Type="int" />
+  </EntityType>
+  <Association Name="FK__Category__Facult__55009F39">
+    <End Role="Faculty_Detail" Type="Self.Faculty_Detail" Multiplicity="0..1" />
+    <End Role="Category" Type="Self.Category" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Faculty_Detail">
+        <PropertyRef Name="Faculty_DetailID" />
+      </Principal>
+      <Dependent Role="Category">
+        <PropertyRef Name="Faculty_DetailID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__Comment__Contrib__5CA1C101">
+    <End Role="Contribution" Type="Self.Contribution" Multiplicity="0..1" />
+    <End Role="Comment" Type="Self.Comment" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Contribution">
+        <PropertyRef Name="ContributionID" />
+      </Principal>
+      <Dependent Role="Comment">
+        <PropertyRef Name="Contribution" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__Comment__Creator__5BAD9CC8">
+    <End Role="User" Type="Self.User" Multiplicity="0..1" />
+    <End Role="Comment" Type="Self.Comment" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="User">
+        <PropertyRef Name="UserID" />
+      </Principal>
+      <Dependent Role="Comment">
+        <PropertyRef Name="Creator" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__Contribut__Categ__57DD0BE4">
+    <End Role="Category" Type="Self.Category" Multiplicity="0..1" />
+    <End Role="Contribution" Type="Self.Contribution" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Category">
+        <PropertyRef Name="CategoryID" />
+      </Principal>
+      <Dependent Role="Contribution">
+        <PropertyRef Name="Category" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__Contribut__Creat__58D1301D">
+    <End Role="User" Type="Self.User" Multiplicity="0..1" />
+    <End Role="Contribution" Type="Self.Contribution" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="User">
+        <PropertyRef Name="UserID" />
+      </Principal>
+      <Dependent Role="Contribution">
+        <PropertyRef Name="Creator" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__Document__Contri__5F7E2DAC">
+    <End Role="Contribution" Type="Self.Contribution" Multiplicity="0..1" />
+    <End Role="Document" Type="Self.Document" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Contribution">
+        <PropertyRef Name="ContributionID" />
+      </Principal>
+      <Dependent Role="Document">
+        <PropertyRef Name="Contribution" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__Faculty_D__Facul__51300E55">
+    <End Role="Faculty" Type="Self.Faculty" Multiplicity="0..1" />
+    <End Role="Faculty_Detail" Type="Self.Faculty_Detail" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Faculty">
+        <PropertyRef Name="FacultyID" />
+      </Principal>
+      <Dependent Role="Faculty_Detail">
+        <PropertyRef Name="FacultyID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__Faculty_D__UserC__5224328E">
+    <End Role="User" Type="Self.User" Multiplicity="0..1" />
+    <End Role="Faculty_Detail" Type="Self.Faculty_Detail" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="User">
+        <PropertyRef Name="UserID" />
+      </Principal>
+      <Dependent Role="Faculty_Detail">
+        <PropertyRef Name="UserCoordinator" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__Image__Contribut__625A9A57">
+    <End Role="Contribution" Type="Self.Contribution" Multiplicity="0..1" />
+    <End Role="Image" Type="Self.Image" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Contribution">
+        <PropertyRef Name="ContributionID" />
+      </Principal>
+      <Dependent Role="Image">
+        <PropertyRef Name="Contribution" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__User__Role__06CD04F7">
+    <End Role="Role" Type="Self.Role" Multiplicity="0..1" />
+    <End Role="User" Type="Self.User" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Role">
+        <PropertyRef Name="RoleID" />
+      </Principal>
+      <Dependent Role="User">
+        <PropertyRef Name="Role" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="DBModelsStoreContainer">
+    <EntitySet Name="Category" EntityType="Self.Category" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Comment" EntityType="Self.Comment" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Contribution" EntityType="Self.Contribution" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Document" EntityType="Self.Document" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Faculty" EntityType="Self.Faculty" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Faculty_Detail" EntityType="Self.Faculty_Detail" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Image" EntityType="Self.Image" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Role" EntityType="Self.Role" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="User" EntityType="Self.User" Schema="dbo" store:Type="Tables" />
+    <AssociationSet Name="FK__Category__Facult__55009F39" Association="Self.FK__Category__Facult__55009F39">
+      <End Role="Faculty_Detail" EntitySet="Faculty_Detail" />
+      <End Role="Category" EntitySet="Category" />
+    </AssociationSet>
+    <AssociationSet Name="FK__Comment__Contrib__5CA1C101" Association="Self.FK__Comment__Contrib__5CA1C101">
+      <End Role="Contribution" EntitySet="Contribution" />
+      <End Role="Comment" EntitySet="Comment" />
+    </AssociationSet>
+    <AssociationSet Name="FK__Comment__Creator__5BAD9CC8" Association="Self.FK__Comment__Creator__5BAD9CC8">
+      <End Role="User" EntitySet="User" />
+      <End Role="Comment" EntitySet="Comment" />
+    </AssociationSet>
+    <AssociationSet Name="FK__Contribut__Categ__57DD0BE4" Association="Self.FK__Contribut__Categ__57DD0BE4">
+      <End Role="Category" EntitySet="Category" />
+      <End Role="Contribution" EntitySet="Contribution" />
+    </AssociationSet>
+    <AssociationSet Name="FK__Contribut__Creat__58D1301D" Association="Self.FK__Contribut__Creat__58D1301D">
+      <End Role="User" EntitySet="User" />
+      <End Role="Contribution" EntitySet="Contribution" />
+    </AssociationSet>
+    <AssociationSet Name="FK__Document__Contri__5F7E2DAC" Association="Self.FK__Document__Contri__5F7E2DAC">
+      <End Role="Contribution" EntitySet="Contribution" />
+      <End Role="Document" EntitySet="Document" />
+    </AssociationSet>
+    <AssociationSet Name="FK__Faculty_D__Facul__51300E55" Association="Self.FK__Faculty_D__Facul__51300E55">
+      <End Role="Faculty" EntitySet="Faculty" />
+      <End Role="Faculty_Detail" EntitySet="Faculty_Detail" />
+    </AssociationSet>
+    <AssociationSet Name="FK__Faculty_D__UserC__5224328E" Association="Self.FK__Faculty_D__UserC__5224328E">
+      <End Role="User" EntitySet="User" />
+      <End Role="Faculty_Detail" EntitySet="Faculty_Detail" />
+    </AssociationSet>
+    <AssociationSet Name="FK__Image__Contribut__625A9A57" Association="Self.FK__Image__Contribut__625A9A57">
+      <End Role="Contribution" EntitySet="Contribution" />
+      <End Role="Image" EntitySet="Image" />
+    </AssociationSet>
+    <AssociationSet Name="FK__User__Role__06CD04F7" Association="Self.FK__User__Role__06CD04F7">
+      <End Role="Role" EntitySet="Role" />
+      <End Role="User" EntitySet="User" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>

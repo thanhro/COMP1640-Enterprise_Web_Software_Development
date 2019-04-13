@@ -32,6 +32,35 @@
                 reader.readAsDataURL(input.files[0]);
             }
         }
+        //CountDown timer
+        $(document).ready(function () {
+            var string_date = document.getElementById('enddate').getAttribute('value');
+            var end = new Date(string_date);
+
+            var _second = 1000;
+            var _minute = _second * 60;
+            var _hour = _minute * 60;
+            var _day = _hour * 24;
+            var timer;
+
+            function showRemaining() {
+                var now = new Date();
+                var distance = end - now;
+                if (distance <= 0) {
+                    clearInterval(timer);
+                    document.getElementById('countdown').innerHTML = 'This topic was close!';
+                    return;
+                }
+                var days = Math.floor(distance / _day);
+                var hours = Math.floor((distance % _day) / _hour);
+                var minutes = Math.floor((distance % _hour) / _minute);
+                var seconds = Math.floor((distance % _minute) / _second);
+
+                document.getElementById('countdown').innerHTML = days + ' days ' + hours + " hours " + minutes + " mins " + seconds + " secs";
+            }
+
+            timer = setInterval(showRemaining, 1000);
+        });
     </script>
 
 </head>
@@ -74,12 +103,19 @@
                     </div>
                     <div class="row" style="color: white; vertical-align: middle; line-height: 45px;">
                         <div class="col-lg-4" style="background-color: #0d62a0;">Final Closure Date</div>
-                        <div class="col-lg-8" style="background-color: #0d62a0;">@Model.document.Contribution1.Category1.FinalClosureDate</div>
+                        <div class="col-lg-8" id="enddate" style="background-color: #0d62a0;" value="@Model.document.Contribution1.Category1.FinalClosureDate">@Model.document.Contribution1.Category1.FinalClosureDate</div>
                     </div>
                     <div class="row" style="vertical-align: middle; line-height: 45px;">
                         <div class="col-lg-4" style="background-color: white; color: #ea8c48;">Time remaining</div>
                         <div class="col-lg-8" style="background-color: #17c177; color: white;">
-                            @(string.Format("{0}", Math.Round(Math.Abs(((Convert.ToDateTime(Model.document.Contribution1.Category1.FinalClosureDate) - DateTime.Now).TotalDays))).ToString() + " days"))
+                            @if (DateTime.Now.CompareTo(Model.document.Contribution1.Category1.FinalClosureDate) <= 0)
+                            {
+                                <span id="countdown"></span>
+                            }
+                            else
+                            {
+                                <span>This topic was close</span>
+                            }
                         </div>
                     </div>
                     <div class="row" style="color: white; vertical-align: middle; line-height: 45px;">
@@ -108,7 +144,14 @@
                     </div>
                     <br />
                     <div class="row" style="padding: 0 40% 0 40%;">
-                        <a data-toggle="modal" data-target="#myModal" class="btn btn-primary">Edit submission</a>
+                        @if (DateTime.Now.CompareTo(Model.document.Contribution1.Category1.FinalClosureDate) <= 0)
+                        {
+                            <a data-toggle="modal" data-target="#myModal" class="btn btn-primary">Edit submission</a>
+                        }
+                        else
+                        {
+                            <button disabled class="btn btn-primary">Edit submission</button>
+                        }
                     </div>
                 </div>
             </div>

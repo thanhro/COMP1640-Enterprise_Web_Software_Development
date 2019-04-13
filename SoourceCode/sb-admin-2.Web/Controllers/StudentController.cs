@@ -91,7 +91,7 @@ namespace sb_admin_2.Web.Controllers
             List<Category> listCat = db.Categories.ToList();
             ViewBag.listCat = new SelectList(listCat, "CategoryID", "CategoryName");
             MultipleModelInOneView_List1 myModel = new MultipleModelInOneView_List1();
-            List<Comment> listComment = db.Comments.Where(cm => cm.Contribution == doc.Contribution1.ContributionID).OrderBy(x => x.CommentDate).ToList();
+            List<Comment> listComment = db.Comments.Where(cm => cm.Contribution == doc.Contribution1.ContributionID && cm.Status == 1).OrderBy(x => x.CommentDate).ToList();
             List<User> listUser = new List<User>();
             for (int i = 0; i < listComment.Count; i++)
             {
@@ -129,7 +129,7 @@ namespace sb_admin_2.Web.Controllers
             List<Category> listCat = db.Categories.ToList();
             ViewBag.listCat = new SelectList(listCat, "CategoryID", "CategoryName");
             MultipleModelInOneView_List1 myModel = new MultipleModelInOneView_List1();
-            List<Comment> listComment = db.Comments.Where(cm => cm.Contribution == ContributionID_Guid).OrderBy(x => x.CommentDate).ToList();
+            List<Comment> listComment = db.Comments.Where(cm => cm.Contribution == ContributionID_Guid && cm.Status == 1).OrderBy(x => x.CommentDate).ToList();
             List<User> listUser = new List<User>();
             for (int i = 0; i < listComment.Count; i++)
             {
@@ -224,7 +224,7 @@ namespace sb_admin_2.Web.Controllers
             List<Category> listCat = db.Categories.ToList();
             ViewBag.listCat = new SelectList(listCat, "CategoryID", "CategoryName");
             MultipleModelInOneView_List1 myModel = new MultipleModelInOneView_List1();
-            List<Comment> listComment = db.Comments.Where(cm => cm.Contribution == doc.Contribution1.ContributionID).OrderBy(x => x.CommentDate).ToList();
+            List<Comment> listComment = db.Comments.Where(cm => cm.Contribution == doc.Contribution1.ContributionID && cm.Status == 1).OrderBy(x => x.CommentDate).ToList();
             List<User> listUser = new List<User>();
             for (int i = 0; i < listComment.Count; i++)
             {

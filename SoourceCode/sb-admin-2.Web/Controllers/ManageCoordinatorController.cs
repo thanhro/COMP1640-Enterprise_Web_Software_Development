@@ -121,7 +121,7 @@ namespace sb_admin_2.Web.Controllers
             MultipleModelInOneView_List ml = new MultipleModelInOneView_List();
             List<Document> listDoc = db.Documents.Where(dc => dc.Contribution == ContributionID_Guid).ToList();
             List<Image> listImg = db.Images.Where(im => im.Contribution == ContributionID_Guid).ToList();
-            List<Comment> listCmt = db.Comments.Where(im => im.Contribution == ContributionID_Guid).ToList();
+            List<Comment> listCmt = db.Comments.Where(im => im.Contribution == ContributionID_Guid && im.Status == 1).ToList();
             List<User> listUser = new List<User>();
             for (int i = 0; i < listCmt.Count; i++)
             {
@@ -154,7 +154,7 @@ namespace sb_admin_2.Web.Controllers
             MultipleModelInOneView_List ml = new MultipleModelInOneView_List();
             List<Document> listDoc = db.Documents.Where(dc => dc.Contribution == ContributionID_Guid).ToList();
             List<Image> listImg = db.Images.Where(im => im.Contribution == ContributionID_Guid).ToList();
-            List<Comment> listCmt = db.Comments.Where(im => im.Contribution == ContributionID_Guid).ToList();
+            List<Comment> listCmt = db.Comments.Where(im => im.Contribution == ContributionID_Guid && im.Status == 1).ToList();
             List<User> listUser = new List<User>();
             for (int i = 0; i < listCmt.Count; i++)
             {
@@ -191,6 +191,28 @@ namespace sb_admin_2.Web.Controllers
                           && fd1.Faculty_DetailID == facdId)
                           select ctb;
             return View("View_Detail_Faculty", listCTB.ToList());
+        }
+
+        public ActionResult Update_ClosureDate()
+        {
+            List<Category> listCat = db.Categories.ToList();
+            ViewBag.ListCat_Check = listCat;
+            ViewBag.listCat = new SelectList(listCat, "CategoryID", "CategoryName");
+            return View();
+        }
+
+        public ActionResult Update_ClosureDate_Real(String new_finalclosuredate, String CategoryID)
+        {
+            var CategoryID_Guid = Guid.Parse(CategoryID);
+            DateTime new_FinalClosureDate = DateTime.ParseExact(new_finalclosuredate, "yyyy-MM-ddTHH:mm", null);
+            Category category = db.Categories.SingleOrDefault(cat => cat.CategoryID == CategoryID_Guid);
+            category.FinalClosureDate = new_FinalClosureDate;
+            db.SaveChanges();
+            ViewBag.Success = "Update closure date successfully!";
+            List<Category> listCat = db.Categories.ToList();
+            ViewBag.ListCat_Check = listCat;
+            ViewBag.listCat = new SelectList(listCat, "CategoryID", "CategoryName");
+            return View("Update_ClosureDate");
         }
     }
 }
