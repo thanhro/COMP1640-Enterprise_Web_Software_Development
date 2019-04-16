@@ -47,7 +47,7 @@ insert into [User] values
 ((select NEWID()), 'longnvgc00982@fpt.edu.vn', '12345678', 'LongNV', 'Ha Noi', '1234567890', '559C2837-E749-44AE-B9DA-9CF2135E33BB', 1),
 ((select NEWID()), 'tuann@fpt.aptech.ac.vn', '12345678', 'TuanN', 'Ha Noi', '1234567890', '559C2837-E749-44AE-B9DA-9CF2135E33BB', 1),
 ((select NEWID()), 'tungndgc00952@fpt.edu.vn', '12345678', 'TungND', 'Ha Noi', '0123456789', '4C42D248-EAC8-4E75-9541-42541245B667', 1),
-((select NEWID()), 'trungntch18001@fpt.edu.vn', '12345678', 'TrungNT', 'Ha Noi', '0987654321', '12C7A2BA-67EC-4DB3-89AE-68679019E7A8', 1),
+((select NEWID()), 'trungntch18001@fpt.edu.vn', '12345678', 'TrungNT', 'Ha Noi', '0987654321', '559C2837-E749-44AE-B9DA-9CF2135E33BB', 1),
 ((select NEWID()), 'thanhldgc00959@fpt.edu.vn', '12345678', 'ThanhLD', 'Ha Noi', '1234567890', '559C2837-E749-44AE-B9DA-9CF2135E33BB', 1),
 ((select NEWID()), 'alwaysrememberyouth@gmail.com', '12345678', 'TungND1', 'Ha Noi', '5678998765', '4C42D248-EAC8-4E75-9541-42541245B667', 1),
 ((select NEWID()), 'canhndgt00545@fpt.edu.vn', '12345678', 'CanhND', 'Ha Noi', '2345665432', 'E29D3FF8-4CB9-4C64-83B2-B15DFF5EB895', 1),
@@ -57,6 +57,8 @@ insert into [User] values
 
 select * from [Role]
 select * from [User]
+
+Update [User] set [Password] = '37213902101311706410244100199109113607173' where [UserID] = 'DA26E35D-B2F1-4500-BBB1-16F0127D35B0'
 
 create table [Faculty_Detail]
 (

@@ -22,11 +22,6 @@ namespace sb_admin_2.Web.Domain
                     menu.Add(new Navbar { Id = 4, nameOption = "View My Files", controller = "Student", action = "ViewStudentFiles", status = true, isParent = false, parentId = 2 });
                     return menu.ToList();
                 }
-                else if (user.Role1.RoleName.Equals("Faculty"))
-                {
-                    menu.Add(new Navbar { Id = 1, nameOption = "Tables", controller = "Home", action = "Tables", imageClass = "fa fa-table fa-fw", status = true, isParent = false, parentId = 0 });
-                    return menu.ToList();
-                }
                 else if (user.Role1.RoleName.Equals("Marketing Coordinator"))
                 {
                     menu.Add(new Navbar { Id = 1, nameOption = "Dashboard", controller = "Home", action = "Index", imageClass = "fa fa-dashboard fa-fw", status = true, isParent = false, parentId = 0 });
@@ -48,6 +43,7 @@ namespace sb_admin_2.Web.Domain
                 }
                 else if (user.Role1.RoleName.Equals("Administrator"))
                 {
+                    menu.Add(new Navbar { Id = 1, nameOption = "Dashboard", controller = "Home", action = "Index", imageClass = "fa fa-dashboard fa-fw", status = true, isParent = false, parentId = 0 });
                     return menu.ToList();
                 }
                 else if (user.Role1.RoleName.Equals("Guest Account"))
