@@ -1,6 +1,7 @@
 ﻿using sb_admin_2.Web.Models;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Dynamic;
 using System.IO;
 using System.Linq;
@@ -60,14 +61,16 @@ namespace sb_admin_2.Web.Controllers
             //View and Move
             ViewBag.Success = "Upload File Successfully!";
             // Send Mail
-            ////Category category = db.Categories.SingleOrDefault(ct => ct.CategoryID == CategoryID_ToUpper);
-            ////String email = category.Faculty_Detail.User.Email;
-            ////MailMessage message = new MailMessage(user.Email, email, "Require publish", "A new document was uploaded you should response within 14 days.");
-            ////message.IsBodyHtml = true;
-            ////SmtpClient client = new SmtpClient("smtp.gmail.com", 587);
-            ////client.EnableSsl = true;
-            ////client.Credentials = new System.Net.NetworkCredential(user.Email, "");
-            ////client.Send(message);
+            string email_config = ConfigurationManager.AppSettings["email"];
+            string password = ConfigurationManager.AppSettings["password"];
+            Category category = db.Categories.SingleOrDefault(ct => ct.CategoryID == CategoryID_ToUpper);
+            String email = category.Faculty_Detail.User.Email;
+            MailMessage message = new MailMessage(email_config, email, "Require publish", "A new document was uploaded you should response within 14 days.");
+            message.IsBodyHtml = true;
+            SmtpClient client = new SmtpClient("smtp.gmail.com", 587);
+            client.EnableSsl = true;
+            client.Credentials = new System.Net.NetworkCredential(email_config, password);
+            client.Send(message);
             //display category
             List<Category> listCat = db.Categories.ToList();
             ViewBag.listCat = new SelectList(listCat, "CategoryID", "CategoryName");
