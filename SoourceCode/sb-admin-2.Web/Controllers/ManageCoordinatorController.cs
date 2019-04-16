@@ -195,7 +195,16 @@ namespace sb_admin_2.Web.Controllers
 
         public ActionResult Update_ClosureDate()
         {
-            List<Category> listCat = db.Categories.ToList();
+            User user = (User)Session["User"];
+            var listCt = from ct in db.Categories
+                       join fd1 in db.Faculty_Detail
+                       on ct.Faculty_DetailID equals fd1.Faculty_DetailID
+                       join f1 in db.Faculties
+                       on fd1.FacultyID equals f1.FacultyID
+                       where (ct.Faculty_DetailID == fd1.Faculty_DetailID
+                       && f1.FacultyID == fd1.FacultyID && fd1.UserCoordinator == user.UserID)
+                       select ct;
+            List<Category> listCat = listCt.ToList();
             ViewBag.ListCat_Check = listCat;
             ViewBag.listCat = new SelectList(listCat, "CategoryID", "CategoryName");
             return View();
