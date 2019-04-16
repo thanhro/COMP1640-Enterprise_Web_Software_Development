@@ -37,13 +37,13 @@ namespace sb_admin_2.Web.Domain
                     menu.Add(new Navbar { Id = 3, nameOption = "Add Faculty", controller = "ManageMarketing", action = "AddFaculty", status = true, isParent = false, parentId = 2 });
                     menu.Add(new Navbar { Id = 4, nameOption = "Assigned Faculty", controller = "ManageMarketing", action = "Assigned_Faculty", status = true, isParent = false, parentId = 2 });
                     menu.Add(new Navbar { Id = 5, nameOption = "View All Faclties", controller = "ManageMarketing", action = "View_All_Faculty", status = true, isParent = false, parentId = 2 });
-                    menu.Add(new Navbar { Id = 6, nameOption = "Create Account", controller = "ManageMarketing", action = "Create_Guest_Account", status = true, isParent = false, parentId = 0 });
                     menu.Add(new Navbar { Id = 7, nameOption = "View Statistic", controller = "ManageMarketing", action = "View_Statistic", status = true, isParent = false, parentId = 0 });
                     return menu.ToList();
                 }
                 else if (user.Role1.RoleName.Equals("Administrator"))
                 {
                     menu.Add(new Navbar { Id = 1, nameOption = "Dashboard", controller = "Home", action = "Index", imageClass = "fa fa-dashboard fa-fw", status = true, isParent = false, parentId = 0 });
+                    menu.Add(new Navbar { Id = 6, nameOption = "Create Account", controller = "ManageMarketing", action = "Create_Guest_Account", status = true, isParent = false, parentId = 0 });
                     return menu.ToList();
                 }
                 else if (user.Role1.RoleName.Equals("Guest Account"))
