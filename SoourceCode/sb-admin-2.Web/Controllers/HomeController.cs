@@ -2,6 +2,7 @@
 using sb_admin_2.Web.Models;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
@@ -49,9 +50,11 @@ namespace sb_admin_2.Web.Controllers
         {
             try
             {
+                string apiKey = ConfigurationManager.AppSettings["apiKey"];
+                string apiSecret = ConfigurationManager.AppSettings["apiSecret"];
                 var DocumentID_Guid = Guid.Parse(DocumentID);
                 Document document = db.Documents.SingleOrDefault(d => d.DocumentID == DocumentID_Guid);
-                StarDocs starDocs = new StarDocs(new ConnectionInfo(new Uri("https://api.gnostice.com/stardocs/v1"), "1c8bce0d76c944889dbc8fc14f59fe90", "fcd2b3791e2b482bbfced550a5ad02c9"));
+                StarDocs starDocs = new StarDocs(new ConnectionInfo(new Uri("https://api.gnostice.com/stardocs/v1"), apiKey, apiSecret));
                 starDocs.Auth.loginApp();
                 ViewerSettings viewerSettings = new ViewerSettings();
                 viewerSettings.VisibleFileOperationControls.Open = true;
