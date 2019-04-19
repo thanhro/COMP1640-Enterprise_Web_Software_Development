@@ -286,12 +286,19 @@ namespace sb_admin_2.Web.Controllers
 
         public ActionResult Search_Statistic(String fromdate, String todate)
         {
+            DateTime fdc = DateTime.Parse(fromdate).Date;
+            DateTime tdc = DateTime.Parse(todate).Date;
             DateTime from_date = DateTime.Parse(fromdate).AddDays(-1);
             DateTime to_date = DateTime.Parse(todate).AddDays(1);
-            var list_Contributuion = from ctb in db.Contributions 
-                                     where ctb.Category1.FinalClosureDate >= from_date && 
+            var list_Contributuion = from ctb in db.Contributions
+                                     where ctb.Category1.FinalClosureDate >= from_date &&
                                      ctb.Category1.FinalClosureDate <= to_date
                                      select ctb;
+            if (fdc.CompareTo(tdc) >= 0)
+            {
+                ViewBag.Error = "To date always more from date!";
+                
+            }
             ViewBag.fromdate = from_date.Date;
             ViewBag.todate = to_date.Date;
             return View("View_Statistic", list_Contributuion.ToList());
@@ -321,7 +328,7 @@ namespace sb_admin_2.Web.Controllers
             ws.Cells["E6"].Value = "Document";
             ws.Cells["F6"].Value = "Image";
 
-            int rowStart = contributions.Count;
+            int rowStart = 7;
             foreach (var item in contributions)
             {
                 ws.Row(rowStart).Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.LightGray;

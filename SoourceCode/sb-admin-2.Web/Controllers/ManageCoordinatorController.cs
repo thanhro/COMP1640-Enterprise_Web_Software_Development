@@ -39,6 +39,9 @@ namespace sb_admin_2.Web.Controllers
             User user = (User)Session["User"];
             String Fac = FacultyID.ToUpper();
             var FacultyID_ToUpper = Guid.Parse(Fac);
+            DateTime datenow = DateTime.Now.Date;
+            DateTime cld = DateTime.Parse(closuredate).Date;
+            DateTime fnd = DateTime.Parse(finalclosuredate).Date;
             DateTime ClosureDate = DateTime.ParseExact(closuredate, "yyyy-MM-ddTHH:mm", null);
             DateTime FinalClosureDate = DateTime.ParseExact(finalclosuredate, "yyyy-MM-ddTHH:mm", null);
             Faculty_Detail faculty_Detail = db.Faculty_Detail.SingleOrDefault(fd => fd.FacultyID == FacultyID_ToUpper && fd.UserCoordinator == user.UserID);
@@ -47,16 +50,30 @@ namespace sb_admin_2.Web.Controllers
                       select c;
             if(cat.Count() == 0)
             {
-                Category category = new Category();
-                category.CategoryName = categoryname;
-                category.ClosureDate = ClosureDate;
-                category.FinalClosureDate = FinalClosureDate;
-                category.Description = description;
-                category.Status = 1;
-                category.Faculty_DetailID = faculty_Detail.Faculty_DetailID;
-                db.Categories.Add(category);
-                db.SaveChanges();
-                ViewBag.Success = "Add Category Successfully!";
+                if(datenow.CompareTo(cld) <= 0)
+                {
+                    if (cld.CompareTo(fnd) < 0)
+                    {
+                        Category category = new Category();
+                        category.CategoryName = categoryname;
+                        category.ClosureDate = ClosureDate;
+                        category.FinalClosureDate = FinalClosureDate;
+                        category.Description = description;
+                        category.Status = 1;
+                        category.Faculty_DetailID = faculty_Detail.Faculty_DetailID;
+                        db.Categories.Add(category);
+                        db.SaveChanges();
+                        ViewBag.Success = "Add Category Successfully!";
+                    }
+                    else
+                    {
+                        ViewBag.Error = "Final closure date always more  closure date!";
+                    }
+                }
+                else
+                {
+                    ViewBag.Error = "Closure date always more than or equal date now!" + cld + " das " + datenow;
+                }
             }
             else
             {

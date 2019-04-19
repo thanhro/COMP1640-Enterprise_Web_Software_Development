@@ -95,7 +95,7 @@ select * from [Category]
 select * from [Faculty_Detail]
 select * from [Faculty]
 select * from [User]
-delete from [Category] where [CategoryID] = '574F64F2-E546-E911-9D2D-E4115BF5193D'
+delete from [Category] where [CategoryID] = 'ED522758-B762-E911-9D78-E4115BF5193D'
 
 create table [Contribution]
 (
