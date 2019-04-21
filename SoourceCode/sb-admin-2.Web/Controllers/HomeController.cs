@@ -17,125 +17,146 @@ namespace sb_admin_2.Web.Controllers
         DBModel db = new DBModel();
         public ActionResult Index()
         {
-            var listCTP = db.Contributions.Where(ct => ct.Status == 2).ToList();
-            List<MultipleModelInOneView_List1> listAll = new List<MultipleModelInOneView_List1>();
-            for (int j = 0; j < listCTP.Count(); j++)
+            try
             {
-                MultipleModelInOneView_List1 ml = new MultipleModelInOneView_List1();
-                var ContributionID_Guid = listCTP[j].ContributionID;
-                Document Doc = db.Documents.SingleOrDefault(dc => dc.Contribution == ContributionID_Guid);
-                Image Img = db.Images.SingleOrDefault(im => im.Contribution == ContributionID_Guid);
-                List<Comment> listCmt = db.Comments.Where(im => im.Contribution == ContributionID_Guid && im.Status == 2).ToList();
-                List<User> listUser = new List<User>();
-                for (int i = 0; i < listCmt.Count; i++)
+                var listCTP = db.Contributions.Where(ct => ct.Status == 2).ToList();
+                List<MultipleModelInOneView_List1> listAll = new List<MultipleModelInOneView_List1>();
+                for (int j = 0; j < listCTP.Count(); j++)
                 {
-                    var user_t = listCmt[i].Creator;
-                    User user1 = db.Users.SingleOrDefault(us => us.UserID == user_t);
-                    listUser.Add(user1);
+                    MultipleModelInOneView_List1 ml = new MultipleModelInOneView_List1();
+                    var ContributionID_Guid = listCTP[j].ContributionID;
+                    Document Doc = db.Documents.SingleOrDefault(dc => dc.Contribution == ContributionID_Guid);
+                    Image Img = db.Images.SingleOrDefault(im => im.Contribution == ContributionID_Guid);
+                    List<Comment> listCmt = db.Comments.Where(im => im.Contribution == ContributionID_Guid && im.Status == 2).ToList();
+                    List<User> listUser = new List<User>();
+                    for (int i = 0; i < listCmt.Count; i++)
+                    {
+                        var user_t = listCmt[i].Creator;
+                        User user1 = db.Users.SingleOrDefault(us => us.UserID == user_t);
+                        listUser.Add(user1);
+                    }
+                    ml.users = listUser;
+                    ml.document = Doc;
+                    ml.image2 = Img;
+                    if (Img == null)
+                    {
+                        ml.image2 = new Image();
+                    }
+                    ml.comments = listCmt;
+                    listAll.Add(ml);
                 }
-                ml.users = listUser;
-                ml.document = Doc;
-                ml.image2 = Img;
-                if(Img == null)
-                {
-                    ml.image2 = new Image();
-                }
-                ml.comments = listCmt;
-                listAll.Add(ml);
+                return View(listAll);
             }
-            return View(listAll);
+            catch(Exception e)
+            {
+                return View("Error");
+            }
         }
 
         public ActionResult View_More(String DocumentID)
         {
             try
             {
-                string apiKey = ConfigurationManager.AppSettings["apiKey"];
-                string apiSecret = ConfigurationManager.AppSettings["apiSecret"];
-                var DocumentID_Guid = Guid.Parse(DocumentID);
-                Document document = db.Documents.SingleOrDefault(d => d.DocumentID == DocumentID_Guid);
-                StarDocs starDocs = new StarDocs(new ConnectionInfo(new Uri("https://api.gnostice.com/stardocs/v1"), apiKey, apiSecret));
-                starDocs.Auth.loginApp();
-                ViewerSettings viewerSettings = new ViewerSettings();
-                viewerSettings.VisibleFileOperationControls.Open = true;
-                ViewResponse viewResponse = starDocs.Viewer.CreateView(new FileObject(Path.Combine(Server.MapPath("~/Files/"), document.Path.Replace("~/Files/", ""))), null, viewerSettings);
-                return new RedirectResult(viewResponse.Url);
+                try
+                {
+                    string apiKey = ConfigurationManager.AppSettings["apiKey"];
+                    string apiSecret = ConfigurationManager.AppSettings["apiSecret"];
+                    var DocumentID_Guid = Guid.Parse(DocumentID);
+                    Document document = db.Documents.SingleOrDefault(d => d.DocumentID == DocumentID_Guid);
+                    StarDocs starDocs = new StarDocs(new ConnectionInfo(new Uri("https://api.gnostice.com/stardocs/v1"), apiKey, apiSecret));
+                    starDocs.Auth.loginApp();
+                    ViewerSettings viewerSettings = new ViewerSettings();
+                    viewerSettings.VisibleFileOperationControls.Open = true;
+                    ViewResponse viewResponse = starDocs.Viewer.CreateView(new FileObject(Path.Combine(Server.MapPath("~/Files/"), document.Path.Replace("~/Files/", ""))), null, viewerSettings);
+                    return new RedirectResult(viewResponse.Url);
+                }
+                catch (Exception e)
+                {
+                    e.ToString();
+                }
+
+                var listCTP = db.Contributions.Where(ct => ct.Status == 2).ToList();
+                List<MultipleModelInOneView_List1> listAll = new List<MultipleModelInOneView_List1>();
+                for (int j = 0; j < listCTP.Count(); j++)
+                {
+                    MultipleModelInOneView_List1 ml = new MultipleModelInOneView_List1();
+                    var ContributionID_Guid = listCTP[j].ContributionID;
+                    Document Doc = db.Documents.SingleOrDefault(dc => dc.Contribution == ContributionID_Guid);
+                    Image Img = db.Images.SingleOrDefault(im => im.Contribution == ContributionID_Guid);
+                    List<Comment> listCmt = db.Comments.Where(im => im.Contribution == ContributionID_Guid && im.Status == 2).ToList();
+                    List<User> listUser = new List<User>();
+                    for (int i = 0; i < listCmt.Count; i++)
+                    {
+                        var user_t = listCmt[i].Creator;
+                        User user1 = db.Users.SingleOrDefault(us => us.UserID == user_t);
+                        listUser.Add(user1);
+                    }
+                    ml.users = listUser;
+                    ml.document = Doc;
+                    ml.image2 = Img;
+                    if (Img == null)
+                    {
+                        ml.image2 = new Image();
+                    }
+                    ml.comments = listCmt;
+                    listAll.Add(ml);
+                }
+                return RedirectToAction("Index", listAll);
             }
             catch(Exception e)
             {
-                e.ToString();
+                return View("Error");
             }
-
-            var listCTP = db.Contributions.Where(ct => ct.Status == 2).ToList();
-            List<MultipleModelInOneView_List1> listAll = new List<MultipleModelInOneView_List1>();
-            for (int j = 0; j < listCTP.Count(); j++)
-            {
-                MultipleModelInOneView_List1 ml = new MultipleModelInOneView_List1();
-                var ContributionID_Guid = listCTP[j].ContributionID;
-                Document Doc = db.Documents.SingleOrDefault(dc => dc.Contribution == ContributionID_Guid);
-                Image Img = db.Images.SingleOrDefault(im => im.Contribution == ContributionID_Guid);
-                List<Comment> listCmt = db.Comments.Where(im => im.Contribution == ContributionID_Guid && im.Status == 2).ToList();
-                List<User> listUser = new List<User>();
-                for (int i = 0; i < listCmt.Count; i++)
-                {
-                    var user_t = listCmt[i].Creator;
-                    User user1 = db.Users.SingleOrDefault(us => us.UserID == user_t);
-                    listUser.Add(user1);
-                }
-                ml.users = listUser;
-                ml.document = Doc;
-                ml.image2 = Img;
-                if (Img == null)
-                {
-                    ml.image2 = new Image();
-                }
-                ml.comments = listCmt;
-                listAll.Add(ml);
-            }
-            return RedirectToAction("Index", listAll);
         }
 
         public ActionResult Add_Comment(String DocumentID, String ContributionID, String comment)
         {
-            User user = (User)Session["User"];
-            var ContributionID_Guid1 = Guid.Parse(ContributionID);
-            DateTime now = DateTime.Now;
-            Comment comm = new Comment();
-            comm.Content = comment;
-            comm.Creator = user.UserID;
-            comm.Contribution = ContributionID_Guid1;
-            comm.CommentDate = now;
-            comm.Status = 2;
-            db.Comments.Add(comm);
-            db.SaveChanges();
-            // View
-            var listCTP = db.Contributions.Where(ct => ct.Status == 2).ToList();
-            List<MultipleModelInOneView_List1> listAll = new List<MultipleModelInOneView_List1>();
-            for (int j = 0; j < listCTP.Count(); j++)
+            try
             {
-                MultipleModelInOneView_List1 ml = new MultipleModelInOneView_List1();
-                var ContributionID_Guid = listCTP[j].ContributionID;
-                Document Doc = db.Documents.SingleOrDefault(dc => dc.Contribution == ContributionID_Guid);
-                Image Img = db.Images.SingleOrDefault(im => im.Contribution == ContributionID_Guid);
-                List<Comment> listCmt = db.Comments.Where(im => im.Contribution == ContributionID_Guid && im.Status == 2).ToList();
-                List<User> listUser = new List<User>();
-                for (int i = 0; i < listCmt.Count; i++)
+                User user = (User)Session["User"];
+                var ContributionID_Guid1 = Guid.Parse(ContributionID);
+                DateTime now = DateTime.Now;
+                Comment comm = new Comment();
+                comm.Content = comment;
+                comm.Creator = user.UserID;
+                comm.Contribution = ContributionID_Guid1;
+                comm.CommentDate = now;
+                comm.Status = 2;
+                db.Comments.Add(comm);
+                db.SaveChanges();
+                // View
+                var listCTP = db.Contributions.Where(ct => ct.Status == 2).ToList();
+                List<MultipleModelInOneView_List1> listAll = new List<MultipleModelInOneView_List1>();
+                for (int j = 0; j < listCTP.Count(); j++)
                 {
-                    var user_t = listCmt[i].Creator;
-                    User user1 = db.Users.SingleOrDefault(us => us.UserID == user_t);
-                    listUser.Add(user1);
+                    MultipleModelInOneView_List1 ml = new MultipleModelInOneView_List1();
+                    var ContributionID_Guid = listCTP[j].ContributionID;
+                    Document Doc = db.Documents.SingleOrDefault(dc => dc.Contribution == ContributionID_Guid);
+                    Image Img = db.Images.SingleOrDefault(im => im.Contribution == ContributionID_Guid);
+                    List<Comment> listCmt = db.Comments.Where(im => im.Contribution == ContributionID_Guid && im.Status == 2).ToList();
+                    List<User> listUser = new List<User>();
+                    for (int i = 0; i < listCmt.Count; i++)
+                    {
+                        var user_t = listCmt[i].Creator;
+                        User user1 = db.Users.SingleOrDefault(us => us.UserID == user_t);
+                        listUser.Add(user1);
+                    }
+                    ml.users = listUser;
+                    ml.document = Doc;
+                    ml.image2 = Img;
+                    if (Img == null)
+                    {
+                        ml.image2 = new Image();
+                    }
+                    ml.comments = listCmt;
+                    listAll.Add(ml);
                 }
-                ml.users = listUser;
-                ml.document = Doc;
-                ml.image2 = Img;
-                if (Img == null)
-                {
-                    ml.image2 = new Image();
-                }
-                ml.comments = listCmt;
-                listAll.Add(ml);
+                return RedirectToAction("Index", listAll);
             }
-            return RedirectToAction("Index", listAll);
+            catch(Exception e)
+            {
+                return View("Error");
+            }
         }
 
         //public ActionResult View_Contribution(String ContributionID)
@@ -184,77 +205,93 @@ namespace sb_admin_2.Web.Controllers
 
         public ActionResult LoginRole(string email, string pass)
         {
-            string passmd5 = encryption(pass);
-            User user = db.Users.SingleOrDefault(u => u.Email.Equals(email) && u.Password.Equals(passmd5));
-            if (user != null && user.Status == 1)
+            try
             {
-                Session.Add("User", user);
-                return RedirectToAction("Index", Session);
-            } else {
-                ViewBag.Alert = "Email or Password invalid.";
-                return View("Login");
+                string passmd5 = encryption(pass);
+                User user = db.Users.SingleOrDefault(u => u.Email.Equals(email) && u.Password.Equals(passmd5));
+                if (user != null && user.Status == 1)
+                {
+                    Session.Add("User", user);
+                    return RedirectToAction("Index", Session);
+                }
+                else
+                {
+                    ViewBag.Alert = "Email or Password invalid.";
+                    return View("Login");
+                }
+            }
+            catch(Exception e)
+            {
+                return View("Error");
             }
         }
 
         public ActionResult Logout()
         {
-            FormsAuthentication.SignOut();
-            if(Session["User"] != null)
+            try
             {
-                Session.Remove("User");
+                FormsAuthentication.SignOut();
+                if (Session["User"] != null)
+                {
+                    Session.Remove("User");
+                }
+                return RedirectToAction("Login", "Home");
             }
-            return RedirectToAction("Login", "Home");
+            catch(Exception e)
+            {
+                return View("Error");
+            }
         }
 
-        public ActionResult FlotCharts()
-        {
-            return View("FlotCharts");
-        }
+        //public ActionResult FlotCharts()
+        //{
+        //    return View("FlotCharts");
+        //}
 
-        public ActionResult MorrisCharts()
-        {
-            return View("MorrisCharts");
-        }
+        //public ActionResult MorrisCharts()
+        //{
+        //    return View("MorrisCharts");
+        //}
 
-        public ActionResult Tables()
-        {
-            return View("Tables");
-        }
+        //public ActionResult Tables()
+        //{
+        //    return View("Tables");
+        //}
 
-        public ActionResult Forms()
-        {
-            return View("Forms");
-        }
+        //public ActionResult Forms()
+        //{
+        //    return View("Forms");
+        //}
 
-        public ActionResult Panels()
-        {
-            return View("Panels");
-        }
+        //public ActionResult Panels()
+        //{
+        //    return View("Panels");
+        //}
 
-        public ActionResult Buttons()
-        {
-            return View("Buttons");
-        }
+        //public ActionResult Buttons()
+        //{
+        //    return View("Buttons");
+        //}
 
-        public ActionResult Notifications()
-        {
-            return View("Notifications");
-        }
+        //public ActionResult Notifications()
+        //{
+        //    return View("Notifications");
+        //}
 
         //public ActionResult Typography()
         //{
         //    return View("Typography");
         //}
 
-        public ActionResult Icons()
-        {
-            return View("Icons");
-        }
+        //public ActionResult Icons()
+        //{
+        //    return View("Icons");
+        //}
 
-        public ActionResult Grid()
-        {
-            return View("Grid");
-        }
+        //public ActionResult Grid()
+        //{
+        //    return View("Grid");
+        //}
 
         //public ActionResult Blank()
         //{

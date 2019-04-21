@@ -30,13 +30,20 @@ namespace sb_admin_2.Web.Controllers
         [HttpPost]
         public ActionResult AddFaculty_Detail(String facultyname, String description)
         {
-            Faculty fac = new Faculty();
-            fac.FacultyName = facultyname;
-            fac.Description = description;
-            db.Faculties.Add(fac);
-            db.SaveChanges();
-            ViewBag.Success = "Add faculty Successfully!";
-            return View("AddFaculty");
+            try
+            {
+                Faculty fac = new Faculty();
+                fac.FacultyName = facultyname;
+                fac.Description = description;
+                db.Faculties.Add(fac);
+                db.SaveChanges();
+                ViewBag.Success = "Add faculty Successfully!";
+                return View("AddFaculty");
+            }
+            catch(Exception e)
+            {
+                return View("Error");
+            }
         }
 
         public void displayDropDL()
@@ -52,166 +59,216 @@ namespace sb_admin_2.Web.Controllers
 
         public ActionResult Assigned_Faculty()
         {
-            displayDropDL();
-            return View();
+            try
+            {
+                displayDropDL();
+                return View();
+            }
+            catch(Exception e)
+            {
+                return View("Error");
+            }
         }
 
         public ActionResult Assigned_Faculty_Detail(String FacultyID, String UserID)
         {
-            String Fac = FacultyID.ToUpper();
-            String Use = UserID.ToUpper();
-            var FacultyID_ToUpper = Guid.Parse(Fac);
-            var UserID_ToUpper = Guid.Parse(Use);
-            //Faculty faculty = db.Faculties.SingleOrDefault(f => f.FacultyID.Equals(FacultyID_ToUpper));
-            //Faculty_Detail fd = db.Faculty_Detail.SingleOrDefault(f => f.FacultyID.Equals(FacultyID_ToUpper));
-            var fd = from f in db.Faculty_Detail
-                     where (f.FacultyID == FacultyID_ToUpper)
-                     select f;
-            if (fd.Count() == 0)
+            try
             {
-                Faculty_Detail faculty_Detail = new Faculty_Detail();
-                faculty_Detail.FacultyID = FacultyID_ToUpper;
-                faculty_Detail.UserCoordinator = UserID_ToUpper;
-                db.Faculty_Detail.Add(faculty_Detail);
-                db.SaveChanges();
-                ViewBag.Success = "Assigned Faculty Successfully!";
+                String Fac = FacultyID.ToUpper();
+                String Use = UserID.ToUpper();
+                var FacultyID_ToUpper = Guid.Parse(Fac);
+                var UserID_ToUpper = Guid.Parse(Use);
+                //Faculty faculty = db.Faculties.SingleOrDefault(f => f.FacultyID.Equals(FacultyID_ToUpper));
+                //Faculty_Detail fd = db.Faculty_Detail.SingleOrDefault(f => f.FacultyID.Equals(FacultyID_ToUpper));
+                var fd = from f in db.Faculty_Detail
+                         where (f.FacultyID == FacultyID_ToUpper)
+                         select f;
+                if (fd.Count() == 0)
+                {
+                    Faculty_Detail faculty_Detail = new Faculty_Detail();
+                    faculty_Detail.FacultyID = FacultyID_ToUpper;
+                    faculty_Detail.UserCoordinator = UserID_ToUpper;
+                    db.Faculty_Detail.Add(faculty_Detail);
+                    db.SaveChanges();
+                    ViewBag.Success = "Assigned Faculty Successfully!";
+                }
+                else
+                {
+                    ViewBag.Error = "This faculty was assigned!";
+                }
+                displayDropDL();
+                return View("Assigned_Faculty");
             }
-            else
+            catch(Exception e)
             {
-                ViewBag.Error = "This faculty was assigned!";
+                return View("Error");
             }
-            displayDropDL();
-            return View("Assigned_Faculty");
         }
 
         //View All faculty
         public ActionResult View_All_Faculty()
         {
-            var abc = from f in db.Faculties
-                      join fd in db.Faculty_Detail
-                      on f.FacultyID equals fd.FacultyID
-                      where (f.FacultyID == fd.FacultyID)
-                      select fd;
-            List<Faculty_Detail> listFacd = abc.ToList();
-            List<int> countDocument = new List<int>();
-            for (int i = 0; i < listFacd.Count; i++)
+            try
             {
-                var facdId1 = Guid.Parse(listFacd[i].Faculty_DetailID.ToString());
-                var count = (from ct in db.Categories
-                             join ctb in db.Contributions
-                             on ct.CategoryID equals ctb.Category
-                             join fd1 in db.Faculty_Detail
-                             on ct.Faculty_DetailID equals fd1.Faculty_DetailID
-                             join f1 in db.Faculties
-                             on fd1.FacultyID equals f1.FacultyID
-                             where (ct.CategoryID == ctb.Category && ct.Faculty_DetailID == fd1.Faculty_DetailID
-                             && f1.FacultyID == fd1.FacultyID
-                             && fd1.Faculty_DetailID == facdId1)
-                             select ctb).Count();
-                countDocument.Add(count);
+                var abc = from f in db.Faculties
+                          join fd in db.Faculty_Detail
+                          on f.FacultyID equals fd.FacultyID
+                          where (f.FacultyID == fd.FacultyID)
+                          select fd;
+                List<Faculty_Detail> listFacd = abc.ToList();
+                List<int> countDocument = new List<int>();
+                for (int i = 0; i < listFacd.Count; i++)
+                {
+                    var facdId1 = Guid.Parse(listFacd[i].Faculty_DetailID.ToString());
+                    var count = (from ct in db.Categories
+                                 join ctb in db.Contributions
+                                 on ct.CategoryID equals ctb.Category
+                                 join fd1 in db.Faculty_Detail
+                                 on ct.Faculty_DetailID equals fd1.Faculty_DetailID
+                                 join f1 in db.Faculties
+                                 on fd1.FacultyID equals f1.FacultyID
+                                 where (ct.CategoryID == ctb.Category && ct.Faculty_DetailID == fd1.Faculty_DetailID
+                                 && f1.FacultyID == fd1.FacultyID
+                                 && fd1.Faculty_DetailID == facdId1)
+                                 select ctb).Count();
+                    countDocument.Add(count);
+                }
+                ViewBag.countDocument = countDocument;
+                return View(listFacd);
             }
-            ViewBag.countDocument = countDocument;
-            return View(listFacd);
+            catch(Exception e)
+            {
+                return View("Error");
+            }
         }
 
         public ActionResult View_Detail_Faculty(String Faculty_DetailID)
         {
-            var facdId = Guid.Parse(Faculty_DetailID);
-            var listCTB = from ct in db.Categories
-                          join ctb in db.Contributions
-                          on ct.CategoryID equals ctb.Category
-                          join fd1 in db.Faculty_Detail
-                          on ct.Faculty_DetailID equals fd1.Faculty_DetailID
-                          join f1 in db.Faculties
-                          on fd1.FacultyID equals f1.FacultyID
-                          where (ct.CategoryID == ctb.Category && ct.Faculty_DetailID == fd1.Faculty_DetailID
-                          && f1.FacultyID == fd1.FacultyID
-                          && fd1.Faculty_DetailID == facdId)
-                          select ctb;
-            return View(listCTB.ToList());
+            try
+            {
+                var facdId = Guid.Parse(Faculty_DetailID);
+                var listCTB = from ct in db.Categories
+                              join ctb in db.Contributions
+                              on ct.CategoryID equals ctb.Category
+                              join fd1 in db.Faculty_Detail
+                              on ct.Faculty_DetailID equals fd1.Faculty_DetailID
+                              join f1 in db.Faculties
+                              on fd1.FacultyID equals f1.FacultyID
+                              where (ct.CategoryID == ctb.Category && ct.Faculty_DetailID == fd1.Faculty_DetailID
+                              && f1.FacultyID == fd1.FacultyID
+                              && fd1.Faculty_DetailID == facdId)
+                              select ctb;
+                return View(listCTB.ToList());
+            }
+            catch(Exception e)
+            {
+                return View("Error");
+            }
         }
 
         public ActionResult View_Detail_Document(String ContributionID)
         {
-            var ContributionID_Guid = Guid.Parse(ContributionID);
-            MultipleModelInOneView_List ml = new MultipleModelInOneView_List();
-            List<Document> listDoc = db.Documents.Where(dc => dc.Contribution == ContributionID_Guid).ToList();
-            List<Image> listImg = db.Images.Where(im => im.Contribution == ContributionID_Guid).ToList();
-            List<Comment> listCmt = db.Comments.Where(im => im.Contribution == ContributionID_Guid && im.Status == 1).ToList();
-            List<User> listUser = new List<User>();
-            for (int i = 0; i < listCmt.Count; i++)
+            try
             {
-                var user_t = listCmt[i].Creator;
-                User user1 = db.Users.SingleOrDefault(us => us.UserID == user_t);
-                listUser.Add(user1);
+                var ContributionID_Guid = Guid.Parse(ContributionID);
+                MultipleModelInOneView_List ml = new MultipleModelInOneView_List();
+                List<Document> listDoc = db.Documents.Where(dc => dc.Contribution == ContributionID_Guid).ToList();
+                List<Image> listImg = db.Images.Where(im => im.Contribution == ContributionID_Guid).ToList();
+                List<Comment> listCmt = db.Comments.Where(im => im.Contribution == ContributionID_Guid && im.Status == 1).ToList();
+                List<User> listUser = new List<User>();
+                for (int i = 0; i < listCmt.Count; i++)
+                {
+                    var user_t = listCmt[i].Creator;
+                    User user1 = db.Users.SingleOrDefault(us => us.UserID == user_t);
+                    listUser.Add(user1);
+                }
+                ml.users = listUser;
+                ml.documents = listDoc;
+                ml.images = listImg;
+                ml.comments = listCmt;
+                ViewBag.ContributionID = ContributionID;
+                return View(ml);
             }
-            ml.users = listUser;
-            ml.documents = listDoc;
-            ml.images = listImg;
-            ml.comments = listCmt;
-            ViewBag.ContributionID = ContributionID;
-            return View(ml);
+            catch(Exception e)
+            {
+                return View("Error");
+            }
+            
         }
         // Download Zip file
         public ActionResult Download_ZipFiles(String ContributionID)
         {
-            List<String> allFilePath = new List<string>();
-            var ContributionID_Guid = Guid.Parse(ContributionID);
-            Contribution contribution = db.Contributions.SingleOrDefault(ctb => ctb.ContributionID == ContributionID_Guid);
-            List<Document> list_Document = db.Documents.Where(dc => dc.Contribution == ContributionID_Guid).ToList();
-            for(int i = 0; i < list_Document.Count; i++)
-            {
-                allFilePath.Add(Path.Combine(Server.MapPath("~/Files/"), list_Document[i].Path.Replace("~/Files/", "")));
-            }
-            List<Image> list_Image = db.Images.Where(im => im.Contribution == ContributionID_Guid).ToList();
-            for (int j = 0; j < list_Image.Count; j++)
-            {
-                allFilePath.Add(Path.Combine(Server.MapPath("~/Images/"), list_Image[j].Path.Replace("~/Images/", "")));
-            }
-            string zipFileName = contribution.Category1.CategoryName + ".zip";
-            Response.ContentType = "application/zip";
-            Response.AddHeader("content-disposition", "filename=" + zipFileName);
-            byte[] buffer = new byte[4096];
-            ZipOutputStream zipOutputStream = new ZipOutputStream(Response.OutputStream);
-            zipOutputStream.SetLevel(3);
             try
             {
-                for (int k = 0; k < allFilePath.Count; k++)
+                List<String> allFilePath = new List<string>();
+                var ContributionID_Guid = Guid.Parse(ContributionID);
+                Contribution contribution = db.Contributions.SingleOrDefault(ctb => ctb.ContributionID == ContributionID_Guid);
+                List<Document> list_Document = db.Documents.Where(dc => dc.Contribution == ContributionID_Guid).ToList();
+                for (int i = 0; i < list_Document.Count; i++)
                 {
-                    Stream fs = System.IO.File.OpenRead(allFilePath[k]);
-                    ZipEntry zipEntry = new ZipEntry(ZipEntry.CleanName(Path.GetFileName(allFilePath[k])));
-                    zipEntry.Size = fs.Length;
-                    zipOutputStream.PutNextEntry(zipEntry);
-                    int count = fs.Read(buffer, 0, buffer.Length);
-                    while(count > 0)
-                    {
-                        zipOutputStream.Write(buffer, 0, count);
-                        count = fs.Read(buffer, 0, buffer.Length);
-                        if (!Response.IsClientConnected)
-                        {
-                            break;
-                        }
-                        Response.Flush();
-                    }
-                    fs.Close();
+                    allFilePath.Add(Path.Combine(Server.MapPath("~/Files/"), list_Document[i].Path.Replace("~/Files/", "")));
                 }
-                zipOutputStream.Close();
-                Response.Flush();
-                Response.End();
+                List<Image> list_Image = db.Images.Where(im => im.Contribution == ContributionID_Guid).ToList();
+                for (int j = 0; j < list_Image.Count; j++)
+                {
+                    allFilePath.Add(Path.Combine(Server.MapPath("~/Images/"), list_Image[j].Path.Replace("~/Images/", "")));
+                }
+                string zipFileName = contribution.Category1.CategoryName + ".zip";
+                Response.ContentType = "application/zip";
+                Response.AddHeader("content-disposition", "filename=" + zipFileName);
+                byte[] buffer = new byte[4096];
+                ZipOutputStream zipOutputStream = new ZipOutputStream(Response.OutputStream);
+                zipOutputStream.SetLevel(3);
+                try
+                {
+                    for (int k = 0; k < allFilePath.Count; k++)
+                    {
+                        Stream fs = System.IO.File.OpenRead(allFilePath[k]);
+                        ZipEntry zipEntry = new ZipEntry(ZipEntry.CleanName(Path.GetFileName(allFilePath[k])));
+                        zipEntry.Size = fs.Length;
+                        zipOutputStream.PutNextEntry(zipEntry);
+                        int count = fs.Read(buffer, 0, buffer.Length);
+                        while (count > 0)
+                        {
+                            zipOutputStream.Write(buffer, 0, count);
+                            count = fs.Read(buffer, 0, buffer.Length);
+                            if (!Response.IsClientConnected)
+                            {
+                                break;
+                            }
+                            Response.Flush();
+                        }
+                        fs.Close();
+                    }
+                    zipOutputStream.Close();
+                    Response.Flush();
+                    Response.End();
+                }
+                catch (Exception)
+                {
+                    return View("Error");
+                }
+                return View();
             }
-            catch (Exception)
+            catch(Exception e)
             {
-
+                return View("Error");
             }
-            return View();
         }
 
         //Account
         public ActionResult Create_Guest_Account()
         {
-            List<Role> listRole = db.Roles.ToList();
-            ViewBag.listRole = new SelectList(listRole, "RoleID", "RoleName");
-            return View();
+            try
+            {
+                List<Role> listRole = db.Roles.ToList();
+                ViewBag.listRole = new SelectList(listRole, "RoleID", "RoleName");
+                return View();
+            }
+            catch(Exception e)
+            {
+                return View("Error");
+            }
         }
 
         private string encryption(String password)
@@ -232,76 +289,97 @@ namespace sb_admin_2.Web.Controllers
 
         public ActionResult Created_Guest_Account_Detail(String email, String password, String name, String address, String phone, String RoleID)
         {
-            var RoleID_Guid = Guid.Parse(RoleID);
-            //convert password to MD5
-            string password_md5 = encryption(password);
-            User checj_user = db.Users.SingleOrDefault(us => us.Email.Equals(email));
-            if(checj_user != null)
+            try
             {
-                ViewBag.Error = "This email is exist already!";
-            }
-            else
-            {
-                if (Regex.Match(email, @"^[a-zA-Z0-9_\.]{5,32}@[a-z0-9]{2,}(\.[a-z0-9]{2,6}){1,3}$").Success)
+                var RoleID_Guid = Guid.Parse(RoleID);
+                //convert password to MD5
+                string password_md5 = encryption(password);
+                User checj_user = db.Users.SingleOrDefault(us => us.Email.Equals(email));
+                if (checj_user != null)
                 {
-                    if (Regex.Match(phone, @"^[0][0-9]{9}").Success)
-                    {
-                        User user = new User();
-                        user.Email = email;
-                        user.Password = password_md5;
-                        user.Name = name;
-                        user.Address = address;
-                        user.Phone = phone;
-                        user.Role = RoleID_Guid;
-                        user.Status = 1;
-                        db.Users.Add(user);
-                        db.SaveChanges();
-                        ViewBag.Success = "Create Account Successfully!";
-                    }
-                    else
-                    {
-                        ViewBag.Error = "Invalid Phone!";
-                    }
+                    ViewBag.Error = "This email is exist already!";
                 }
                 else
                 {
-                    ViewBag.Error = "Invalid Email!";
+                    if (Regex.Match(email, @"^[a-zA-Z0-9_\.]{5,32}@[a-z0-9]{2,}(\.[a-z0-9]{2,6}){1,3}$").Success)
+                    {
+                        if (Regex.Match(phone, @"^[0][0-9]{9}").Success)
+                        {
+                            User user = new User();
+                            user.Email = email;
+                            user.Password = password_md5;
+                            user.Name = name;
+                            user.Address = address;
+                            user.Phone = phone;
+                            user.Role = RoleID_Guid;
+                            user.Status = 1;
+                            db.Users.Add(user);
+                            db.SaveChanges();
+                            ViewBag.Success = "Create Account Successfully!";
+                        }
+                        else
+                        {
+                            ViewBag.Error = "Invalid Phone!";
+                        }
+                    }
+                    else
+                    {
+                        ViewBag.Error = "Invalid Email!";
+                    }
                 }
+                List<Role> listRole = db.Roles.ToList();
+                ViewBag.listRole = new SelectList(listRole, "RoleID", "RoleName");
+                return View("Create_Guest_Account");
             }
-            List<Role> listRole = db.Roles.ToList();
-            ViewBag.listRole = new SelectList(listRole, "RoleID", "RoleName");
-            return View("Create_Guest_Account");
+            catch(Exception e)
+            {
+                return View("Error");
+            }
         }
 
         public ActionResult View_Statistic(String fromdate, String todate)
         {
-            if(fromdate == null || todate == null)
+            try
             {
-                ViewBag.fromdate = "";
-                ViewBag.todate = "";
-                return View(db.Contributions.ToList());
+                if (fromdate == null || todate == null)
+                {
+                    ViewBag.fromdate = "";
+                    ViewBag.todate = "";
+                    return View(db.Contributions.ToList());
+                }
+                return null;
             }
-            return null;
+            catch(Exception e)
+            {
+                return View("Error");
+            }
         }
 
         public ActionResult Search_Statistic(String fromdate, String todate)
         {
-            DateTime fdc = DateTime.Parse(fromdate).Date;
-            DateTime tdc = DateTime.Parse(todate).Date;
-            DateTime from_date = DateTime.Parse(fromdate).AddDays(-1);
-            DateTime to_date = DateTime.Parse(todate).AddDays(1);
-            var list_Contributuion = from ctb in db.Contributions
-                                     where ctb.Category1.FinalClosureDate >= from_date &&
-                                     ctb.Category1.FinalClosureDate <= to_date
-                                     select ctb;
-            if (fdc.CompareTo(tdc) >= 0)
+            try
             {
-                ViewBag.Error = "To date always more from date!";
-                
+                DateTime fdc = DateTime.Parse(fromdate).Date;
+                DateTime tdc = DateTime.Parse(todate).Date;
+                DateTime from_date = DateTime.Parse(fromdate).AddDays(-1);
+                DateTime to_date = DateTime.Parse(todate).AddDays(1);
+                var list_Contributuion = from ctb in db.Contributions
+                                         where ctb.Category1.FinalClosureDate >= from_date &&
+                                         ctb.Category1.FinalClosureDate <= to_date
+                                         select ctb;
+                if (fdc.CompareTo(tdc) >= 0)
+                {
+                    ViewBag.Error = "To date always more from date!";
+
+                }
+                ViewBag.fromdate = from_date.Date;
+                ViewBag.todate = to_date.Date;
+                return View("View_Statistic", list_Contributuion.ToList());
             }
-            ViewBag.fromdate = from_date.Date;
-            ViewBag.todate = to_date.Date;
-            return View("View_Statistic", list_Contributuion.ToList());
+            catch(Exception e)
+            {
+                return View("Error");
+            }
         }
 
         private void Export(List<Contribution> contributions)
@@ -350,23 +428,30 @@ namespace sb_admin_2.Web.Controllers
 
         public ActionResult ExportToExcel(String fromdate, String todate)
         {
-            if(fromdate == null || todate == null)
+            try
             {
-                List<Contribution> list_Contribution = db.Contributions.ToList();
-                Export(list_Contribution);
+                if (fromdate == null || todate == null)
+                {
+                    List<Contribution> list_Contribution = db.Contributions.ToList();
+                    Export(list_Contribution);
+                }
+                if (fromdate != null || todate != null)
+                {
+                    DateTime from_date = DateTime.Parse(fromdate).AddDays(-1);
+                    DateTime to_date = DateTime.Parse(todate).AddDays(1);
+                    var list_Contributuion = from ctb in db.Contributions
+                                             where ctb.Category1.FinalClosureDate >= from_date &&
+                                             ctb.Category1.FinalClosureDate <= to_date
+                                             select ctb;
+                    List<Contribution> contributions = list_Contributuion.ToList();
+                    Export(contributions);
+                }
+                return null;
             }
-            if(fromdate != null || todate != null)
+            catch(Exception e)
             {
-                DateTime from_date = DateTime.Parse(fromdate).AddDays(-1);
-                DateTime to_date = DateTime.Parse(todate).AddDays(1);
-                var list_Contributuion = from ctb in db.Contributions
-                                         where ctb.Category1.FinalClosureDate >= from_date &&
-                                         ctb.Category1.FinalClosureDate <= to_date
-                                         select ctb;
-                List<Contribution> contributions = list_Contributuion.ToList();
-                Export(contributions);
+                return View("Error");
             }
-            return null;
         }
     }
 }
