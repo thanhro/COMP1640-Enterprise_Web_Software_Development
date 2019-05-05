@@ -14,7 +14,6 @@ create table [Role]
 insert into [Role] values
 ((select NEWID()), 'Marketing Manager', 'Marketing Manager'),
 ((select NEWID()), 'Marketing Coordinator', 'Marketing Coordinator'),
-((select NEWID()), 'Faculty', 'Faculty'),
 ((select NEWID()), 'Student', 'Student'),
 ((select NEWID()), 'Administrator', 'Administrator'),
 ((select NEWID()), 'Guest Account', 'Guest Account');
