@@ -24,15 +24,24 @@ namespace sb_admin_2.Web.Controllers
         {
             try
             {
+                DateTime datenow = DateTime.Now.Date;
                 List<Category> listCat = db.Categories.ToList();
-                ViewBag.listCat = new SelectList(listCat, "CategoryID", "CategoryName");
+                List<Category> listCat_Check = new List<Category>();
+                for (int i = 0; i < listCat.Count; i++)
+                {
+                    if(listCat[i].ClosureDate.Value.Date.CompareTo(datenow) <= 0 && listCat[i].FinalClosureDate.Value.Date.CompareTo(datenow) >= 0)
+                    {
+                        listCat_Check.Add(listCat[i]);
+                    }
+                }
+                ViewBag.listCat = new SelectList(listCat_Check, "CategoryID", "CategoryName");
                 return View();
-            }
+        }
             catch(Exception e)
             {
                 return View("Error");
-            }
-        }
+    }
+}
 
         public ActionResult UploadFile_Detail(String title, String description, String CategoryID, HttpPostedFileBase file_document)
         {
@@ -81,8 +90,17 @@ namespace sb_admin_2.Web.Controllers
                 client.Credentials = new System.Net.NetworkCredential(email_config, password);
                 client.Send(message);
                 //display category
+                DateTime datenow = DateTime.Now.Date;
                 List<Category> listCat = db.Categories.ToList();
-                ViewBag.listCat = new SelectList(listCat, "CategoryID", "CategoryName");
+                List<Category> listCat_Check = new List<Category>();
+                for (int i = 0; i < listCat.Count; i++)
+                {
+                    if (listCat[i].ClosureDate.Value.Date.CompareTo(datenow) <= 0 && listCat[i].FinalClosureDate.Value.Date.CompareTo(datenow) >= 0)
+                    {
+                        listCat_Check.Add(listCat[i]);
+                    }
+                }
+                ViewBag.listCat = new SelectList(listCat_Check, "CategoryID", "CategoryName");
                 return View("UploadFile");
             }
             catch (Exception e)
@@ -114,8 +132,17 @@ namespace sb_admin_2.Web.Controllers
                 // View
                 var DocumentID_ToUpper = Guid.Parse(DocumentID);
                 Document doc = db.Documents.SingleOrDefault(d => d.DocumentID == DocumentID_ToUpper);
+                DateTime datenow = DateTime.Now.Date;
                 List<Category> listCat = db.Categories.ToList();
-                ViewBag.listCat = new SelectList(listCat, "CategoryID", "CategoryName");
+                List<Category> listCat_Check = new List<Category>();
+                for (int i = 0; i < listCat.Count; i++)
+                {
+                    if (listCat[i].ClosureDate.Value.Date.CompareTo(datenow) <= 0 && listCat[i].FinalClosureDate.Value.Date.CompareTo(datenow) >= 0)
+                    {
+                        listCat_Check.Add(listCat[i]);
+                    }
+                }
+                ViewBag.listCat = new SelectList(listCat_Check, "CategoryID", "CategoryName");
                 MultipleModelInOneView_List1 myModel = new MultipleModelInOneView_List1();
                 List<Comment> listComment = db.Comments.Where(cm => cm.Contribution == doc.Contribution1.ContributionID && cm.Status == 1).OrderBy(x => x.CommentDate).ToList();
                 List<User> listUser = new List<User>();

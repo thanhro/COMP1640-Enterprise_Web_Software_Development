@@ -76,7 +76,7 @@ namespace sb_admin_2.Web.Controllers
                         }
                         else
                         {
-                            ViewBag.Error = "Final closure date always more  closure date!";
+                            ViewBag.Error = "Final closure date always more closure date!";
                         }
                     }
                     else
@@ -282,19 +282,31 @@ namespace sb_admin_2.Web.Controllers
             }
         }
 
-        public ActionResult Update_ClosureDate_Real(String new_finalclosuredate, String CategoryID)
+        public ActionResult Update_ClosureDate_Real(String oldfinalclosuredate, String new_finalclosuredate, String CategoryID)
         {
             try
             {
-                var CategoryID_Guid = Guid.Parse(CategoryID);
-                DateTime new_FinalClosureDate = DateTime.ParseExact(new_finalclosuredate, "yyyy-MM-ddTHH:mm", null);
-                Category category = db.Categories.SingleOrDefault(cat => cat.CategoryID == CategoryID_Guid);
-                category.FinalClosureDate = new_FinalClosureDate;
-                db.SaveChanges();
-                ViewBag.Success = "Update closure date successfully!";
-                List<Category> listCat = db.Categories.ToList();
-                ViewBag.ListCat_Check = listCat;
-                ViewBag.listCat = new SelectList(listCat, "CategoryID", "CategoryName");
+                DateTime ofcld = DateTime.Parse(oldfinalclosuredate).Date;
+                DateTime nfcld = DateTime.Parse(new_finalclosuredate).Date;
+                if(ofcld.CompareTo(nfcld) <= 0)
+                {
+                    var CategoryID_Guid = Guid.Parse(CategoryID);
+                    DateTime new_FinalClosureDate = DateTime.ParseExact(new_finalclosuredate, "yyyy-MM-ddTHH:mm", null);
+                    Category category = db.Categories.SingleOrDefault(cat => cat.CategoryID == CategoryID_Guid);
+                    category.FinalClosureDate = new_FinalClosureDate;
+                    db.SaveChanges();
+                    ViewBag.Success = "Update closure date successfully!";
+                    List<Category> listCat = db.Categories.ToList();
+                    ViewBag.ListCat_Check = listCat;
+                    ViewBag.listCat = new SelectList(listCat, "CategoryID", "CategoryName");
+                }
+                else
+                {
+                    List<Category> listCat = db.Categories.ToList();
+                    ViewBag.ListCat_Check = listCat;
+                    ViewBag.listCat = new SelectList(listCat, "CategoryID", "CategoryName");
+                    ViewBag.Error = "New final closure date always more than or equal old closure date!";
+                }
                 return View("Update_ClosureDate");
             }
             catch(Exception e)

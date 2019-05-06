@@ -110,16 +110,11 @@ namespace sb_admin_2.Web.Controllers
         {
             try
             {
-                var abc = from f in db.Faculties
-                          join fd in db.Faculty_Detail
-                          on f.FacultyID equals fd.FacultyID
-                          where (f.FacultyID == fd.FacultyID)
-                          select fd;
-                List<Faculty_Detail> listFacd = abc.ToList();
+                List<Faculty> listFac = db.Faculties.ToList();
                 List<int> countDocument = new List<int>();
-                for (int i = 0; i < listFacd.Count; i++)
+                for (int i = 0; i < listFac.Count; i++)
                 {
-                    var facdId1 = Guid.Parse(listFacd[i].Faculty_DetailID.ToString());
+                    var facId = Guid.Parse(listFac[i].FacultyID.ToString());
                     var count = (from ct in db.Categories
                                  join ctb in db.Contributions
                                  on ct.CategoryID equals ctb.Category
@@ -129,12 +124,12 @@ namespace sb_admin_2.Web.Controllers
                                  on fd1.FacultyID equals f1.FacultyID
                                  where (ct.CategoryID == ctb.Category && ct.Faculty_DetailID == fd1.Faculty_DetailID
                                  && f1.FacultyID == fd1.FacultyID
-                                 && fd1.Faculty_DetailID == facdId1)
+                                 && f1.FacultyID == facId)
                                  select ctb).Count();
                     countDocument.Add(count);
                 }
                 ViewBag.countDocument = countDocument;
-                return View(listFacd);
+                return View(listFac);
             }
             catch(Exception e)
             {
@@ -142,11 +137,12 @@ namespace sb_admin_2.Web.Controllers
             }
         }
 
-        public ActionResult View_Detail_Faculty(String Faculty_DetailID)
+        public ActionResult View_Detail_Faculty(String FacultyID)
         {
             try
             {
-                var facdId = Guid.Parse(Faculty_DetailID);
+                var facId = Guid.Parse(FacultyID);
+                Faculty_Detail faculty_Detail = db.Faculty_Detail.SingleOrDefault(facd => facd.FacultyID == facId);
                 var listCTB = from ct in db.Categories
                               join ctb in db.Contributions
                               on ct.CategoryID equals ctb.Category
@@ -156,7 +152,7 @@ namespace sb_admin_2.Web.Controllers
                               on fd1.FacultyID equals f1.FacultyID
                               where (ct.CategoryID == ctb.Category && ct.Faculty_DetailID == fd1.Faculty_DetailID
                               && f1.FacultyID == fd1.FacultyID
-                              && fd1.Faculty_DetailID == facdId)
+                              && fd1.Faculty_DetailID == faculty_Detail.Faculty_DetailID)
                               select ctb;
                 return View(listCTB.ToList());
             }
